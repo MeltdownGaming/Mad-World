@@ -149,8 +149,12 @@ objLoader.load('Prison.obj', function(prison){
 });
 
 //Controls
-const controls = new THREE.PlayerControls(camera, player);
-controls.init();
+// const controls = new THREE.PlayerControls(camera, player);
+// controls.init();
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.minDistance = 5;
+controls.maxDistance = 15;
 
 camera.position.set(0, -17, 5);
 camera.rotation.set(1.2, 0.006, -0.02);
@@ -280,7 +284,7 @@ function render() {
     requestAnimationFrame(render);
     renderer.render(scene, camera);
 
-    controls.update();
+    // controls.update();
 
     if(keyboard[KEY_LEFT]){
         player.rotation.y += playerSettings.turnSpeed;
