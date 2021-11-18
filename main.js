@@ -22,17 +22,11 @@ renderer.shadowMap.enabled = true;
 var ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
 scene.add(ambientLight);
 
-var spotLight = new THREE.SpotLight(0xffff00, 0.5);
+var spotLight = new THREE.SpotLight(0xffffff, 0.85, 1000, Math.PI / 2);
 spotLight.position.set(50, 10, 50);
 spotLight.target.position.x = 20;
 scene.add(spotLight);
 scene.add(spotLight.target);
-
-var spotLight2 = new THREE.SpotLight(0x00ffff, 0.5);
-spotLight2.position.set(-50, -10, 50);
-spotLight2.target.position.x = -20;
-scene.add(spotLight2);
-scene.add(spotLight2.target);
 
 //START
 
@@ -147,10 +141,12 @@ player.rotation.x = Math.PI * 0.5;
 player.position.z += 2.85;
 
 //Map
-objLoader.load('Prison.obj', function(object){
-    scene.add(object)
+objLoader.load('Prison.obj', function(prison){
+    prison.rotation.x = Math.PI / 2;
+    prison.position.z += 0.01; //Does't glitch with the ground
+    prison.scale.set(15, 15, 15)
+    scene.add(prison);
 });
-
 
 //Controls
 const controls = new THREE.PlayerControls(camera, player);
@@ -296,7 +292,7 @@ function render() {
 };
 
 var planeGeometry = new THREE.PlaneGeometry(100, 100, 100, 100);
-var planeMaterial = new THREE.MeshLambertMaterial({color: 0xffffff});
+var planeMaterial = new THREE.MeshLambertMaterial({color: 0xAAFF75});
 var plane = new THREE.Mesh(planeGeometry, planeMaterial);
 
 plane.position.set(0, 0, 0);
