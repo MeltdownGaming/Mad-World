@@ -7,6 +7,11 @@ var keyboard = {};
 var playerSettings = {
     turnSpeed: Math.PI * 0.01
 }
+
+//OBJ Loader
+var objLoader = new THREE.OBJLoader();
+objLoader.setPath('/Assets/');
+
 const KEY_LEFT = 37;
 const KEY_RIGHT = 39;
 
@@ -31,6 +36,7 @@ scene.add(spotLight2.target);
 
 //START
 
+//Player
 function initCharacter(){
     //Torso
     var torsoGeometry = facetedBox(1.75, 2, 1, 0.1, false);
@@ -140,6 +146,13 @@ var player = new initCharacter();
 player.rotation.x = Math.PI * 0.5;
 player.position.z += 2.85;
 
+//Map
+objLoader.load('Prison.obj', function(object){
+    scene.add(object)
+});
+
+
+//Controls
 const controls = new THREE.PlayerControls(camera, player);
 controls.init();
 
