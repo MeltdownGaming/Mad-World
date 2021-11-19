@@ -140,11 +140,11 @@ player.rotation.x = Math.PI * 0.5;
 player.position.z += 2.85;
 
 //Map
-objLoader.load('test.obj', function(prison){
+objLoader.load('prison.obj', function(prison){
     prison.rotation.x = Math.PI / 2;
     prison.position.z += 0.1; //Does't glitch with the ground
     prison.scale.set(15, 15, 15)
-    scene.add(prison);
+    // scene.add(prison);
 });
 
 camera.up.set( 0, 0, 1 );
