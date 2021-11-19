@@ -1,3 +1,4 @@
+//Follow Genka Character control video - Watch Stack Overflow for an answer to question.
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 var renderer = new THREE.WebGLRenderer();
@@ -141,9 +142,9 @@ player.rotation.x = Math.PI * 0.5;
 player.position.z += 2.85;
 
 //Map
-objLoader.load('Prison.obj', function(prison){
+objLoader.load('prison.obj', function(prison){
     prison.rotation.x = Math.PI / 2;
-    prison.position.z += 0.01; //Does't glitch with the ground
+    prison.position.z += 0.1; //Does't glitch with the ground
     prison.scale.set(15, 15, 15)
     scene.add(prison);
 });
@@ -151,9 +152,9 @@ objLoader.load('Prison.obj', function(prison){
 //Controls
 // const controls = new THREE.PlayerControls(camera, player);
 // controls.init(); 
-const controls = new CameraControls(camera, renderer.domElement);
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.minDistance = 5;
-controls.maxDistance = 100;
+controls.maxDistance = 500;
 controls.enablePan = false;
 controls.target.set(0, 0, 0)
 controls.update();
