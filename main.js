@@ -150,11 +150,13 @@ objLoader.load('Prison.obj', function(prison){
 
 //Controls
 // const controls = new THREE.PlayerControls(camera, player);
-// controls.init();
-const controls = new THREE.OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
+// controls.init(); 
+const controls = new CameraControls(camera, renderer.domElement);
 controls.minDistance = 5;
-controls.maxDistance = 15;
+controls.maxDistance = 100;
+controls.enablePan = false;
+controls.target.set(0, 0, 0)
+controls.update();
 
 camera.position.set(0, -17, 5);
 camera.rotation.set(1.2, 0.006, -0.02);
