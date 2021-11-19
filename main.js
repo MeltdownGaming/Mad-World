@@ -3,8 +3,6 @@ var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 var renderer = new THREE.WebGLRenderer();
 
-var keyboard = {};
-
 var playerSettings = {
     turnSpeed: Math.PI * 0.01
 }
@@ -142,12 +140,14 @@ player.rotation.x = Math.PI * 0.5;
 player.position.z += 2.85;
 
 //Map
-objLoader.load('prison.obj', function(prison){
+objLoader.load('test.obj', function(prison){
     prison.rotation.x = Math.PI / 2;
     prison.position.z += 0.1; //Does't glitch with the ground
     prison.scale.set(15, 15, 15)
     scene.add(prison);
 });
+
+camera.up.set( 0, 0, 1 );
 
 //Controls
 // const controls = new THREE.PlayerControls(camera, player);
@@ -305,17 +305,22 @@ var plane = new THREE.Mesh(planeGeometry, planeMaterial);
 plane.position.set(0, 0, 0);
 scene.add(plane);
 
-function keyDown(event) {
-    keyboard[event.keyCode] = true;
-};
+//Keys
+const keysPressed = {};
+document.addEventListener('keydown', (event) => {
+    if(event.shiftKey){
+        //Sprint
+    } else {
+        keysPressed[event.key.toLowerCase()] = true;
+    }
+}, false);
 
-function keyUp(event) {
-    keyboard[event.keyCode] = false;
-};
+document.addEventListener('keyup', (event) => {
+    keysPressed[event.key.toLowerCase()] = false;
+}, false);
 
 window.addEventListener('resize', onWindowResize, false);
-window.addEventListener('keydown', keyDown);
-window.addEventListener('keyup', keyUp);
+
 
 document.getElementById("scene").appendChild(renderer.domElement);
 render();
