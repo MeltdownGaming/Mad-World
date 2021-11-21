@@ -4,15 +4,23 @@ var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHei
 var renderer = new THREE.WebGLRenderer();
 
 var playerSettings = {
-    turnSpeed: Math.PI * 0.01
+    turnSpeed: Math.PI * 0.01,
+    speed: 0.2
 }
 
 //OBJ Loader
 var objLoader = new THREE.OBJLoader();
 objLoader.setPath('/Assets/');
 
-const KEY_LEFT = 37;
-const KEY_RIGHT = 39;
+const keysPressed = {};
+
+const KEY_LEFT = 'arrowleft';
+const KEY_RIGHT = 'arrowright';
+const KEY_W = 'w';
+const KEY_A = 'a';
+const KEY_S = 's';
+const KEY_D = 'd';
+const KEY_SHIFT = 'shift';
 
 renderer.setClearColor(0x87CEEB);
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -33,14 +41,14 @@ scene.add(spotLight.target);
 function initCharacter(){
     //Torso
     var torsoGeometry = facetedBox(1.75, 2, 1, 0.1, false);
-    var torsoMaterial = new THREE.MeshLambertMaterial({color: 0xff0000});
+    var torsoMaterial = new THREE.MeshLambertMaterial({color: 0xFE7300});
     var torso = new THREE.Mesh(torsoGeometry, torsoMaterial);
 
     torso.position.set(0, 0, 0);
 
     //Upper Right arm
     var upperRightArmGeometry = facetedBox(1, 1.1, 1, 0.1, false);
-    var upperRightArmMaterial = new THREE.MeshLambertMaterial({color: 0xff0000});
+    var upperRightArmMaterial = new THREE.MeshLambertMaterial({color: 0xFE7300});
     var upperRightArm = new THREE.Mesh(upperRightArmGeometry, upperRightArmMaterial);
 
     upperRightArm.position.set(-1.2, 0.45, 0);
@@ -59,7 +67,7 @@ function initCharacter(){
 
     //Upper Left arm
     var upperLeftArmGeometry = facetedBox(1, 1.1, 1, 0.1, false);
-    var upperLeftArmMaterial = new THREE.MeshLambertMaterial({color: 0xff0000});
+    var upperLeftArmMaterial = new THREE.MeshLambertMaterial({color: 0xFE7300});
     var upperLeftArm = new THREE.Mesh(upperLeftArmGeometry, upperLeftArmMaterial);
 
     upperLeftArm.position.set(1.2, 0.45, 0);
@@ -78,14 +86,14 @@ function initCharacter(){
 
     //Upper Right leg
     var upperRightLegGeometry = facetedBox(0.9, 1.1, 1, 0.1, false);
-    var upperRightLegMaterial = new THREE.MeshLambertMaterial({color: 0x0000ff});
+    var upperRightLegMaterial = new THREE.MeshLambertMaterial({color: 0xFE7300});
     var upperRightLeg = new THREE.Mesh(upperRightLegGeometry, upperRightLegMaterial);
 
     upperRightLeg.position.set(-0.4, -1.4, 0);
 
     //Lower Right leg
     var lowerRightLegGeometry = facetedBox(0.9, 1.1, 1, 0.1, false);
-    var lowerRightLegMaterial = new THREE.MeshLambertMaterial({color: 0x0000ff});
+    var lowerRightLegMaterial = new THREE.MeshLambertMaterial({color: 0xFE7300});
     var lowerRightLeg = new THREE.Mesh(lowerRightLegGeometry, lowerRightLegMaterial);
 
     lowerRightLeg.position.set(-0.4, -2.3, 0);
@@ -97,14 +105,14 @@ function initCharacter(){
 
     //Upper Left leg
     var upperLeftLegGeometry = facetedBox(0.9, 1.1, 1, 0.1, false);
-    var upperLeftLegMaterial = new THREE.MeshLambertMaterial({color: 0x0000ff});
+    var upperLeftLegMaterial = new THREE.MeshLambertMaterial({color: 0xFE7300});
     var upperLeftLeg = new THREE.Mesh(upperLeftLegGeometry, upperLeftLegMaterial);
 
     upperLeftLeg.position.set(0.4, -2.3, 0);
 
     //Lower Left leg
     var lowerLeftLegGeometry = facetedBox(0.9, 1.1, 1, 0.1, false);
-    var lowerLeftLegMaterial = new THREE.MeshLambertMaterial({color: 0x0000ff});
+    var lowerLeftLegMaterial = new THREE.MeshLambertMaterial({color: 0xFE7300});
     var lowerLeftLeg = new THREE.Mesh(lowerLeftLegGeometry, lowerLeftLegMaterial);
 
     lowerLeftLeg.position.set(0.4, -1.4, 0);
@@ -144,20 +152,13 @@ objLoader.load('prison.obj', function(prison){
     prison.rotation.x = Math.PI / 2;
     prison.position.z += 0.1; //Does't glitch with the ground
     prison.scale.set(15, 15, 15)
-    // scene.add(prison);
+    scene.add(prison);
 });
 
 camera.up.set( 0, 0, 1 );
 
-//Controls
-// const controls = new THREE.PlayerControls(camera, player);
-// controls.init(); 
-const controls = new THREE.OrbitControls(camera, renderer.domElement);
-controls.minDistance = 5;
-controls.maxDistance = 500;
-controls.enablePan = false;
-controls.target.set(0, 0, 0)
-controls.update();
+var controls;
+initControls();
 
 camera.position.set(0, -17, 5);
 camera.rotation.set(1.2, 0.006, -0.02);
@@ -277,6 +278,45 @@ function facetedBox(w, h, d, f, isWireframed){
     return geom;
 };
 
+function initControls() {
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.minDistance = 5;
+    controls.maxDistance = 150;
+    controls.enablePan = false;
+    controls.target.set(0, 0, 0);
+    controls.update();
+}
+
+function updateControls(){
+    controls.target.copy(player.position);
+
+    //Left and Right Rotation
+    if(keysPressed[KEY_LEFT]){
+        player.rotation.y += playerSettings.turnSpeed;
+    }
+
+    if(keysPressed[KEY_RIGHT]){
+        player.rotation.y -= playerSettings.turnSpeed;
+    }
+    
+    //W and S Movement
+    if(keysPressed[KEY_W]){
+        player.position.x -= Math.sin(player.rotation.y) * playerSettings.speed;
+        player.position.y -= -Math.cos(player.rotation.y) * playerSettings.speed;
+
+        camera.position.x -= Math.sin(player.rotation.y) * playerSettings.speed;
+        camera.position.y -= -Math.cos(player.rotation.y) * playerSettings.speed;
+    }
+
+    if(keysPressed[KEY_S]){
+        player.position.x += Math.sin(player.rotation.y) * playerSettings.speed;
+        player.position.y += -Math.cos(player.rotation.y) * playerSettings.speed;
+
+        camera.position.x += Math.sin(player.rotation.y) * playerSettings.speed;
+        camera.position.y += -Math.cos(player.rotation.y) * playerSettings.speed;
+    }
+}
+
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -287,15 +327,7 @@ function render() {
     requestAnimationFrame(render);
     renderer.render(scene, camera);
 
-    // controls.update();
-
-    if(keyboard[KEY_LEFT]){
-        player.rotation.y += playerSettings.turnSpeed;
-    }
-
-    if(keyboard[KEY_RIGHT]){
-        player.rotation.y -= playerSettings.turnSpeed;
-    }
+    updateControls();
 };
 
 var planeGeometry = new THREE.PlaneGeometry(100, 100, 100, 100);
@@ -306,21 +338,14 @@ plane.position.set(0, 0, 0);
 scene.add(plane);
 
 //Keys
-const keysPressed = {};
 document.addEventListener('keydown', (event) => {
-    if(event.shiftKey){
-        //Sprint
-    } else {
-        keysPressed[event.key.toLowerCase()] = true;
-    }
+    keysPressed[event.key.toLowerCase()] = true;
 }, false);
-
 document.addEventListener('keyup', (event) => {
     keysPressed[event.key.toLowerCase()] = false;
 }, false);
 
 window.addEventListener('resize', onWindowResize, false);
-
 
 document.getElementById("scene").appendChild(renderer.domElement);
 render();
