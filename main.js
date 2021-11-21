@@ -1,11 +1,12 @@
-//Write Custom controls.
+//Select team menu
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 var renderer = new THREE.WebGLRenderer();
 
 var playerSettings = {
     turnSpeed: Math.PI * 0.01,
-    speed: 0.2
+    speed: 0.2,
+    sprintSpeed: 0.5
 }
 
 //OBJ Loader
@@ -13,8 +14,9 @@ var objLoader = new THREE.OBJLoader();
 objLoader.setPath('/Assets/');
 
 const keysPressed = {};
-
+const KEY_UP = 'arrowup';
 const KEY_LEFT = 'arrowleft';
+const KEY_DOWN = 'arrowdown';
 const KEY_RIGHT = 'arrowright';
 const KEY_W = 'w';
 const KEY_A = 'a';
@@ -290,30 +292,58 @@ function initControls() {
 function updateControls(){
     controls.target.copy(player.position);
 
-    //Left and Right Rotation
-    if(keysPressed[KEY_LEFT]){
-        player.rotation.y += playerSettings.turnSpeed;
-    }
+    if(keysPressed[KEY_SHIFT]){
+        //Left and Right Rotation
+        if(keysPressed[KEY_LEFT]){
+            player.rotation.y += playerSettings.turnSpeed;
+        }
 
-    if(keysPressed[KEY_RIGHT]){
-        player.rotation.y -= playerSettings.turnSpeed;
-    }
-    
-    //W and S Movement
-    if(keysPressed[KEY_W]){
-        player.position.x -= Math.sin(player.rotation.y) * playerSettings.speed;
-        player.position.y -= -Math.cos(player.rotation.y) * playerSettings.speed;
+        if(keysPressed[KEY_RIGHT]){
+            player.rotation.y -= playerSettings.turnSpeed;
+        }
+        
+        //W and S Movement
+        if(keysPressed[KEY_W] || keysPressed[KEY_UP]){
+            player.position.x -= Math.sin(player.rotation.y) * playerSettings.sprintSpeed;
+            player.position.y -= -Math.cos(player.rotation.y) * playerSettings.sprintSpeed;
 
-        camera.position.x -= Math.sin(player.rotation.y) * playerSettings.speed;
-        camera.position.y -= -Math.cos(player.rotation.y) * playerSettings.speed;
-    }
+            camera.position.x -= Math.sin(player.rotation.y) * playerSettings.sprintSpeed;
+            camera.position.y -= -Math.cos(player.rotation.y) * playerSettings.sprintSpeed;
+        }
 
-    if(keysPressed[KEY_S]){
-        player.position.x += Math.sin(player.rotation.y) * playerSettings.speed;
-        player.position.y += -Math.cos(player.rotation.y) * playerSettings.speed;
+        if(keysPressed[KEY_S] || keysPressed[KEY_DOWN]){
+            player.position.x += Math.sin(player.rotation.y) * playerSettings.sprintSpeed;
+            player.position.y += -Math.cos(player.rotation.y) * playerSettings.sprintSpeed;
 
-        camera.position.x += Math.sin(player.rotation.y) * playerSettings.speed;
-        camera.position.y += -Math.cos(player.rotation.y) * playerSettings.speed;
+            camera.position.x += Math.sin(player.rotation.y) * playerSettings.sprintSpeed;
+            camera.position.y += -Math.cos(player.rotation.y) * playerSettings.sprintSpeed;
+        }
+    } else {
+        //Left and Right Rotation
+        if(keysPressed[KEY_LEFT]){
+            player.rotation.y += playerSettings.turnSpeed;
+        }
+
+        if(keysPressed[KEY_RIGHT]){
+            player.rotation.y -= playerSettings.turnSpeed;
+        }
+        
+        //W and S Movement
+        if(keysPressed[KEY_W] || keysPressed[KEY_UP]){
+            player.position.x -= Math.sin(player.rotation.y) * playerSettings.speed;
+            player.position.y -= -Math.cos(player.rotation.y) * playerSettings.speed;
+
+            camera.position.x -= Math.sin(player.rotation.y) * playerSettings.speed;
+            camera.position.y -= -Math.cos(player.rotation.y) * playerSettings.speed;
+        }
+
+        if(keysPressed[KEY_S] || keysPressed[KEY_DOWN]){
+            player.position.x += Math.sin(player.rotation.y) * playerSettings.speed;
+            player.position.y += -Math.cos(player.rotation.y) * playerSettings.speed;
+
+            camera.position.x += Math.sin(player.rotation.y) * playerSettings.speed;
+            camera.position.y += -Math.cos(player.rotation.y) * playerSettings.speed;
+        }
     }
 }
 
