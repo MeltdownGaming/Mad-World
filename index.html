@@ -1,20 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset='UTF-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <title>Mad World</title>
 
-    <script src="https://threejs.org/build/three.min.js"></script>
-    <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://threejs.org/examples/js/loaders/OBJLoader.js"></script>
-    <script src="https://threejs.org/examples/js/loaders/MTLLoader.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <script src='https://threejs.org/build/three.min.js'></script>
+    <script src='https://threejs.org/examples/js/controls/OrbitControls.js'></script>
+    <script src='https://threejs.org/examples/js/loaders/OBJLoader.js'></script>
+    <script src='https://threejs.org/examples/js/loaders/MTLLoader.js'></script>
+    
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Play&display=swap" rel="stylesheet">
+
+    <link rel='stylesheet' href='style.css'>
 </head>
 <body>
-    <div id="scene"></div>
+    <div id='scene'></div>
 
-    <script src="main.js"></script>
+    <div id='teamSelect'>
+        <div id='prisonerBtn' class='ui teamSelectButtons' onclick="changeTeam('Prisoner')">
+            <img src="Assets/Prisoner.png" alt="Prisoner" class="notDraggable">
+            <span>Prisoner</span>
+        </div>
+        <div id='citizenBtn' class='ui teamSelectButtons center'>
+            <img src="Assets/Citizen.png" alt="Citizen" class="notDraggable">
+            <span>Citizen</span>
+        </div>
+        <div id='policeBtn' class='ui teamSelectButtons'>
+            <img src="Assets/Police.png" alt="Police" class="notDraggable">
+            <span>Police</span>
+        </div>
+    </div>
+
+    <script src='main.js'></script>
 </body>
 </html>

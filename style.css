@@ -1,4 +1,77 @@
 body {
     margin: 0;
-    overflow: none;
+    overflow: hidden;
+}
+
+.ui {
+    position: absolute; /* Add a top/bottom/left/right property if used*/
+}
+
+.center {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.teamSelectButtons {
+    height: 200px;
+    width: 150px;
+    font-size: 30px;
+    font-family: 'Play', sans-serif;
+    border: none;
+}
+
+.teamSelectButtons span {
+    position: absolute;
+    bottom: 0%;
+    right: 50%;
+    transform: translate(50%, 0%);
+}
+
+#prisonerBtn {
+    top: 50%;
+    left: calc(50% - 175px);
+    transform: translate(-50%, -50%);
+    background-color: rgb(254, 115, 0);
+}
+
+#prisonerBtn img {
+    margin-left: 30px;
+    margin-top: 10px;
+}
+
+#policeBtn img {
+    margin-left: -20px;
+    margin-top: 10px;
+}
+
+#prisonerBtn img, #policeBtn img {
+    width: 150px;
+}
+
+#citizenBtn img {
+    width: 175px;
+    margin-left: -15px;
+    margin-top: 10px;
+}
+
+.notDraggable {
+    -webkit-user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+#citizenBtn { 
+    /* Already positioned in .center */
+    transform: translate(-50%, -50%);
+    background-color: rgb(192, 189, 189);
+}
+
+#policeBtn {
+    top: 50%;
+    left: calc(50% + 175px);
+    transform: translate(-50%, -50%);
+    background-color: rgb(52, 122, 202);
 }

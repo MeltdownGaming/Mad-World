@@ -6,8 +6,10 @@ var renderer = new THREE.WebGLRenderer();
 var playerSettings = {
     turnSpeed: Math.PI * 0.01,
     speed: 0.2,
-    sprintSpeed: 0.5
+    sprintSpeed: 0.4
 }
+
+var team = 'Citizen';
 
 //OBJ Loader
 var objLoader = new THREE.OBJLoader();
@@ -146,8 +148,8 @@ function initCharacter(){
 }
 
 var player = new initCharacter();
-player.rotation.x = Math.PI * 0.5;
-player.position.z += 2.85;
+player.rotation.set(Math.PI * 0.5, -Math.PI / 2, Math.PI * 2)
+player.position.set(1.5, -2, 2.85);
 
 //Map
 objLoader.load('prison.obj', function(prison){
@@ -157,13 +159,15 @@ objLoader.load('prison.obj', function(prison){
     scene.add(prison);
 });
 
-camera.up.set( 0, 0, 1 );
+camera.up.set(0, 0, 1);
 
 var controls;
 initControls();
 
-camera.position.set(0, -17, 5);
-camera.rotation.set(1.2, 0.006, -0.02);
+controls.enabled = false;
+
+camera.position.set(65, -21, 43);
+camera.rotation.set(0.5, 1, 1);
 
 //END
 
@@ -282,10 +286,9 @@ function facetedBox(w, h, d, f, isWireframed){
 
 function initControls() {
     controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.minDistance = 5;
+    controls.minDistance = 2;
     controls.maxDistance = 150;
     controls.enablePan = false;
-    controls.target.set(0, 0, 0);
     controls.update();
 }
 
@@ -345,6 +348,23 @@ function updateControls(){
             camera.position.y += -Math.cos(player.rotation.y) * playerSettings.speed;
         }
     }
+}
+
+function changeTeam(team) {
+    if(team == 'Prisoner'){
+        document.getElementById('teamSelect').style.display = 'none';
+        controls.enabled = true;
+    };
+}
+
+function outputCamera(){
+    console.log(Math.round(camera.position.x));
+    console.log(Math.round(camera.position.y));
+    console.log(Math.round(camera.position.z));
+    console.log("");
+    console.log(Math.round(camera.rotation.x));
+    console.log(Math.round(camera.rotation.y));
+    console.log(Math.round(camera.rotation.z));
 }
 
 function onWindowResize() {
