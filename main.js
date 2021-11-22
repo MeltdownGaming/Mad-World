@@ -151,14 +151,6 @@ var player = new initCharacter();
 player.rotation.set(Math.PI * 0.5, -Math.PI / 2, Math.PI * 2)
 player.position.set(1.5, -2, 2.85);
 
-//Map
-objLoader.load('prison.obj', function(prison){
-    prison.rotation.x = Math.PI / 2;
-    prison.position.z += 0.1; //Does't glitch with the ground
-    prison.scale.set(15, 15, 15)
-    scene.add(prison);
-});
-
 camera.up.set(0, 0, 1);
 
 var controls;
@@ -284,6 +276,26 @@ function facetedBox(w, h, d, f, isWireframed){
     return geom;
 };
 
+var planeGeometry, planeMaterial, plane;
+var prison;
+function loadEnvironment(){
+    //Ground
+    planeGeometry = new THREE.PlaneGeometry(100, 100, 100, 100);
+    planeMaterial = new THREE.MeshLambertMaterial({color: 0xAAFF75});
+    plane = new THREE.Mesh(planeGeometry, planeMaterial);
+    
+    plane.position.set(0, 0, 0);
+    scene.add(plane);
+
+    //Map
+    objLoader.load('prison.obj', function(prison){
+        prison.rotation.x = Math.PI / 2;
+        prison.position.z += 0.1; //Does't glitch with the ground
+        prison.scale.set(15, 15, 15)
+        scene.add(prison);
+    });
+}
+
 function initControls() {
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.minDistance = 2;
@@ -380,12 +392,24 @@ function render() {
     updateControls();
 };
 
-var planeGeometry = new THREE.PlaneGeometry(100, 100, 100, 100);
-var planeMaterial = new THREE.MeshLambertMaterial({color: 0xAAFF75});
-var plane = new THREE.Mesh(planeGeometry, planeMaterial);
+function toScreenPosition(obj, cam) {
+    var vector = new THREE.Vector3();
 
-plane.position.set(0, 0, 0);
-scene.add(plane);
+    var widthHalf = 0.5 * renderer.context.canvas.width;
+    var heightHalf = 0.5 * renderer.context.canvas.height;
+
+    obj.updateMatrixWorld();
+    vector.setFromMatrixPosition(obj.matrixWorld);
+    vector.project(cam);
+
+    vector.x = ( vector.x * widthHalf ) + widthHalf;
+    vector.y = - ( vector.y * heightHalf ) + heightHalf;
+
+    return { 
+        x: vector.x,
+        y: vector.y
+    };
+};
 
 //Keys
 document.addEventListener('keydown', (event) => {
@@ -399,3 +423,4 @@ window.addEventListener('resize', onWindowResize, false);
 
 document.getElementById("scene").appendChild(renderer.domElement);
 render();
+loadEnvironment();
