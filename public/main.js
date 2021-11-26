@@ -1,4 +1,4 @@
-//Select team menu
+//Fix prison.obj not passing through socket.io! :(
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 var renderer = new THREE.WebGLRenderer();
@@ -13,7 +13,7 @@ var team = 'Citizen';
 
 //OBJ Loader
 var objLoader = new THREE.OBJLoader();
-objLoader.setPath('/Assets/');
+objLoader.setPath('Assets/');
 
 const keysPressed = {};
 const KEY_UP = 'arrowup';
@@ -40,6 +40,8 @@ scene.add(spotLight);
 scene.add(spotLight.target);
 
 //START
+
+var socket = io();
 
 //Player
 function initCharacter(){
