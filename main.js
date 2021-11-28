@@ -11,6 +11,7 @@ var playerSettings = {
 }
 
 var team = 'Citizen';
+var player;
 
 //OBJ Loader
 var objLoader = new THREE.OBJLoader();
@@ -43,7 +44,7 @@ scene.add(spotLight.target);
 //START
 
 //Player
-function initCharacter(){
+function initCharacter(type){
     //Torso
     var torsoGeometry = facetedBox(1.75, 2, 1, 0.1, false);
     var torsoMaterial = new THREE.MeshLambertMaterial({color: 0xFE7300});
@@ -152,7 +153,6 @@ camera.up.set(0, 0, 1);
 
 var controls;
 initControls();
-
 controls.enabled = false;
 
 camera.position.set(65, -21, 43);
@@ -369,21 +369,18 @@ function updateControls(){
     }
 }
 
-function changeTeam(team) {
-    if(team == 'Prisoner'){
+function changeTeam(newTeam) {
+    if(newTeam == 'Prisoner'){
+        team = 'Prisoner';
         document.getElementById('teamSelect').style.display = 'none';
+
+        player = new initCharacter('Prisoner');
+        player.rotation.set(Math.PI * 0.5, -Math.PI / 2, Math.PI * 2);
+        player.position.set(1.5, -2, 2.85);
+        scene.add(player);
+
         controls.enabled = true;
     };
-}
-
-function outputCamera(){
-    console.log(Math.round(camera.position.x));
-    console.log(Math.round(camera.position.y));
-    console.log(Math.round(camera.position.z));
-    console.log("");
-    console.log(Math.round(camera.rotation.x));
-    console.log(Math.round(camera.rotation.y));
-    console.log(Math.round(camera.rotation.z));
 }
 
 function onWindowResize() {
