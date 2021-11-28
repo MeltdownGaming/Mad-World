@@ -11,95 +11,13 @@
     <script src='https://threejs.org/examples/js/controls/OrbitControls.js'></script>
     <script src='https://threejs.org/examples/js/loaders/OBJLoader.js'></script>
     <script src='https://threejs.org/examples/js/loaders/MTLLoader.js'></script>
-
-    <!-- Socket.io -->
-    <script src="/socket.io/socket.io.min.js"></script>
     
     <!-- Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Play&display=swap" rel="stylesheet">
 
-    <!-- CSS -->
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-        }
-
-        .ui {
-            position: absolute; /* Add a top/bottom/left/right property if used*/
-        }
-
-        .center {
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .teamSelectButtons {
-            height: 200px;
-            width: 150px;
-            font-size: 30px;
-            font-family: 'Play', sans-serif;
-            border: none;
-        }
-
-        .teamSelectButtons span {
-            position: absolute;
-            bottom: 0%;
-            right: 50%;
-            transform: translate(50%, 0%);
-        }
-
-        #prisonerBtn {
-            top: 50%;
-            left: calc(50% - 175px);
-            transform: translate(-50%, -50%);
-            background-color: rgb(254, 115, 0);
-        }
-
-        #prisonerBtn img {
-            margin-left: 30px;
-            margin-top: 10px;
-        }
-
-        #policeBtn img {
-            margin-left: -20px;
-            margin-top: 10px;
-        }
-
-        #prisonerBtn img, #policeBtn img {
-            width: 150px;
-        }
-
-        #citizenBtn img {
-            width: 175px;
-            margin-left: -15px;
-            margin-top: 10px;
-        }
-
-        .notDraggable {
-            -webkit-user-drag: none;
-            user-select: none;
-            -moz-user-select: none;
-            -webkit-user-select: none;
-            -ms-user-select: none;
-        }
-
-        #citizenBtn { 
-            /* Already positioned in .center */
-            transform: translate(-50%, -50%);
-            background-color: rgb(192, 189, 189);
-        }
-
-        #policeBtn {
-            top: 50%;
-            left: calc(50% + 175px);
-            transform: translate(-50%, -50%);
-            background-color: rgb(52, 122, 202);
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id='scene'></div>
@@ -119,6 +37,6 @@
         </div>
     </div>
 
-    <script src='/main.js'></script>
+    <script src='main.js'></script>
 </body>
 </html>
