@@ -1,4 +1,5 @@
 //Fix prison.obj not passing through socket.io! :(
+//Socket.io mulitplayer :C
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 var renderer = new THREE.WebGLRenderer();
@@ -40,8 +41,6 @@ scene.add(spotLight);
 scene.add(spotLight.target);
 
 //START
-
-var socket = io();
 
 //Player
 function initCharacter(){
@@ -148,10 +147,6 @@ function initCharacter(){
 
     return character;
 }
-
-var player = new initCharacter();
-player.rotation.set(Math.PI * 0.5, -Math.PI / 2, Math.PI * 2)
-player.position.set(1.5, -2, 2.85);
 
 camera.up.set(0, 0, 1);
 
@@ -307,59 +302,69 @@ function initControls() {
 }
 
 function updateControls(){
-    controls.target.copy(player.position);
+    if(controls.enabled){
+        controls.target.copy(player.position);
 
-    if(keysPressed[KEY_SHIFT]){
-        //Left and Right Rotation
-        if(keysPressed[KEY_LEFT]){
-            player.rotation.y += playerSettings.turnSpeed;
-        }
+        if(keysPressed[KEY_SHIFT]){
+            //Left and Right Rotation
+            if(keysPressed[KEY_LEFT]){
+                player.rotation.y += playerSettings.turnSpeed;
+            }
+    
+            if(keysPressed[KEY_RIGHT]){
+                player.rotation.y -= playerSettings.turnSpeed;
+            }
+            
+            //W and S Movement
+            if(keysPressed[KEY_W] || keysPressed[KEY_UP]){
+                player.position.x -= Math.sin(player.rotation.y) * playerSettings.sprintSpeed;
+                player.position.y -= -Math.cos(player.rotation.y) * playerSettings.sprintSpeed;
+    
+                camera.position.x -= Math.sin(player.rotation.y) * playerSettings.sprintSpeed;
+                camera.position.y -= -Math.cos(player.rotation.y) * playerSettings.sprintSpeed;
 
-        if(keysPressed[KEY_RIGHT]){
-            player.rotation.y -= playerSettings.turnSpeed;
-        }
-        
-        //W and S Movement
-        if(keysPressed[KEY_W] || keysPressed[KEY_UP]){
-            player.position.x -= Math.sin(player.rotation.y) * playerSettings.sprintSpeed;
-            player.position.y -= -Math.cos(player.rotation.y) * playerSettings.sprintSpeed;
+                socket.emit('updateXYpos', username, player.position.x, player.position.y);
+            }
+    
+            if(keysPressed[KEY_S] || keysPressed[KEY_DOWN]){
+                player.position.x += Math.sin(player.rotation.y) * playerSettings.sprintSpeed;
+                player.position.y += -Math.cos(player.rotation.y) * playerSettings.sprintSpeed;
+    
+                camera.position.x += Math.sin(player.rotation.y) * playerSettings.sprintSpeed;
+                camera.position.y += -Math.cos(player.rotation.y) * playerSettings.sprintSpeed;
 
-            camera.position.x -= Math.sin(player.rotation.y) * playerSettings.sprintSpeed;
-            camera.position.y -= -Math.cos(player.rotation.y) * playerSettings.sprintSpeed;
-        }
+                socket.emit('updateXYpos', username, player.position.x, player.position.y);
+            }
+        } else {
+            //Left and Right Rotation
+            if(keysPressed[KEY_LEFT]){
+                player.rotation.y += playerSettings.turnSpeed;
+            }
+    
+            if(keysPressed[KEY_RIGHT]){
+                player.rotation.y -= playerSettings.turnSpeed;
+            }
+            
+            //W and S Movement
+            if(keysPressed[KEY_W] || keysPressed[KEY_UP]){
+                player.position.x -= Math.sin(player.rotation.y) * playerSettings.speed;
+                player.position.y -= -Math.cos(player.rotation.y) * playerSettings.speed;
+    
+                camera.position.x -= Math.sin(player.rotation.y) * playerSettings.speed;
+                camera.position.y -= -Math.cos(player.rotation.y) * playerSettings.speed;
 
-        if(keysPressed[KEY_S] || keysPressed[KEY_DOWN]){
-            player.position.x += Math.sin(player.rotation.y) * playerSettings.sprintSpeed;
-            player.position.y += -Math.cos(player.rotation.y) * playerSettings.sprintSpeed;
+                socket.emit('updateXYpos', username, player.position.x, player.position.y);
+            }
+    
+            if(keysPressed[KEY_S] || keysPressed[KEY_DOWN]){
+                player.position.x += Math.sin(player.rotation.y) * playerSettings.speed;
+                player.position.y += -Math.cos(player.rotation.y) * playerSettings.speed;
+    
+                camera.position.x += Math.sin(player.rotation.y) * playerSettings.speed;
+                camera.position.y += -Math.cos(player.rotation.y) * playerSettings.speed;
 
-            camera.position.x += Math.sin(player.rotation.y) * playerSettings.sprintSpeed;
-            camera.position.y += -Math.cos(player.rotation.y) * playerSettings.sprintSpeed;
-        }
-    } else {
-        //Left and Right Rotation
-        if(keysPressed[KEY_LEFT]){
-            player.rotation.y += playerSettings.turnSpeed;
-        }
-
-        if(keysPressed[KEY_RIGHT]){
-            player.rotation.y -= playerSettings.turnSpeed;
-        }
-        
-        //W and S Movement
-        if(keysPressed[KEY_W] || keysPressed[KEY_UP]){
-            player.position.x -= Math.sin(player.rotation.y) * playerSettings.speed;
-            player.position.y -= -Math.cos(player.rotation.y) * playerSettings.speed;
-
-            camera.position.x -= Math.sin(player.rotation.y) * playerSettings.speed;
-            camera.position.y -= -Math.cos(player.rotation.y) * playerSettings.speed;
-        }
-
-        if(keysPressed[KEY_S] || keysPressed[KEY_DOWN]){
-            player.position.x += Math.sin(player.rotation.y) * playerSettings.speed;
-            player.position.y += -Math.cos(player.rotation.y) * playerSettings.speed;
-
-            camera.position.x += Math.sin(player.rotation.y) * playerSettings.speed;
-            camera.position.y += -Math.cos(player.rotation.y) * playerSettings.speed;
+                socket.emit('updateXYpos', username, player.position.x, player.position.y);
+            }
         }
     }
 }
@@ -426,3 +431,40 @@ window.addEventListener('resize', onWindowResize, false);
 document.getElementById("scene").appendChild(renderer.domElement);
 render();
 loadEnvironment();
+
+//Socket.io
+var socket = io();
+
+var username = prompt('What\'s your name?');
+socket.emit('username', username);
+
+var threeObjects = {};
+
+socket.on('syncPlayers', function(players){
+    players.forEach(function(value){
+        newplayer = value;
+        addPlayer(newplayer);
+    });
+});
+
+function addPlayer() {
+    console.log("adding " + newplayer)
+    charObjectName = newplayer + "Char"
+    console.log("added" + newplayer)
+
+    player = new initCharacter();
+    player.rotation.set(Math.PI * 0.5, -Math.PI / 2, Math.PI * 2);
+    player.position.set(1.5, -2, 2.85);
+
+    scene.add(player);
+    controls.enabled = true;
+
+    //Reference
+    threeObjects[charObjectName] =  player;
+}
+
+socket.on('updatePos', function(name, pos1, pos2){
+    toMove = threeObjects[name + "Char"];
+    toMove.position.x = pos1;
+    toMove.position.y = pos2;
+});
