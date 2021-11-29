@@ -1,5 +1,6 @@
-//Fix prison.obj not passing through socket.io! :(
-//Socket.io mulitplayer :C
+//Walk Animations:
+//Make body a dictionary so the key can be a string and the value can be the mesh needed to be manipulated
+//Design Course Video for tweening (cubes)
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 var renderer = new THREE.WebGLRenderer();
@@ -9,6 +10,10 @@ var playerSettings = {
     speed: 0.2,
     sprintSpeed: 0.4
 }
+
+var body = [];
+
+var datGUI = new dat.GUI();
 
 var team = 'Citizen';
 var player;
@@ -48,11 +53,12 @@ function initCharacter(role, skin){
     let color;
     let skincolor;
 
+    console.log(role);
+
     if(role == 'Prisoner') {
         color = 0xFE7300;
-    }
-    if(role == 'Police') {
-        color = 0xff0000;
+    } else if(role == 'Police') {
+        color = 0x347ACA;
     } else if(role == 'Citizen') {
         color = 0xBFBDBD;
     }
@@ -60,11 +66,14 @@ function initCharacter(role, skin){
     if(skin == 'Tan'){
         skincolor = 0xF1C27D;
     }
+
     //Torso
     var torsoGeometry = facetedBox(1.75, 2, 1, 0.1, false);
     var torsoMaterial = new THREE.MeshLambertMaterial({color: color});
     var torso = new THREE.Mesh(torsoGeometry, torsoMaterial);
 
+    body.push(torso);
+    torso.name = "torso";
     torso.position.set(0, 0, 0);
 
     //Upper Right arm
@@ -72,6 +81,8 @@ function initCharacter(role, skin){
     var upperRightArmMaterial = new THREE.MeshLambertMaterial({color: color});
     var upperRightArm = new THREE.Mesh(upperRightArmGeometry, upperRightArmMaterial);
 
+    body.push(upperRightArm);
+    upperRightArm.name = "upperRightArm";
     upperRightArm.position.set(-1.2, 0.45, 0);
 
     //Lower Right Arm
@@ -79,6 +90,8 @@ function initCharacter(role, skin){
     var lowerRightArmMaterial = new THREE.MeshLambertMaterial({color: skincolor});
     var lowerRightArm = new THREE.Mesh(lowerRightArmGeometry, lowerRightArmMaterial);
 
+    body.push(lowerRightArm);
+    lowerRightArm.name = "lowerRightArm";
     lowerRightArm.position.set(-1.2, -0.45, 0);
 
     //Right Arm
@@ -91,6 +104,8 @@ function initCharacter(role, skin){
     var upperLeftArmMaterial = new THREE.MeshLambertMaterial({color: color});
     var upperLeftArm = new THREE.Mesh(upperLeftArmGeometry, upperLeftArmMaterial);
 
+    body.push(upperLeftArm);
+    upperLeftArm.name = "upperLeftArm";
     upperLeftArm.position.set(1.2, 0.45, 0);
 
     //Lower Left arm
@@ -98,6 +113,8 @@ function initCharacter(role, skin){
     var lowerLeftArmMaterial = new THREE.MeshLambertMaterial({color: skincolor});
     var lowerLeftArm = new THREE.Mesh(lowerLeftArmGeometry, lowerLeftArmMaterial);
 
+    body.push(lowerLeftArm);
+    lowerLeftArm.name = "lowerLeftArm";
     lowerLeftArm.position.set(1.2, -0.45, 0);
 
     //Left Arm
@@ -110,6 +127,8 @@ function initCharacter(role, skin){
     var upperRightLegMaterial = new THREE.MeshLambertMaterial({color: color});
     var upperRightLeg = new THREE.Mesh(upperRightLegGeometry, upperRightLegMaterial);
 
+    body.push(upperRightLeg);
+    upperRightLeg.name = "upperRightLeg";
     upperRightLeg.position.set(-0.4, -1.4, 0);
 
     //Lower Right leg
@@ -117,6 +136,8 @@ function initCharacter(role, skin){
     var lowerRightLegMaterial = new THREE.MeshLambertMaterial({color: color});
     var lowerRightLeg = new THREE.Mesh(lowerRightLegGeometry, lowerRightLegMaterial);
 
+    body.push(lowerRightLeg);
+    lowerRightLeg.name = "lowerRightLeg";
     lowerRightLeg.position.set(-0.4, -2.3, 0);
 
     //Right Leg
@@ -129,6 +150,8 @@ function initCharacter(role, skin){
     var upperLeftLegMaterial = new THREE.MeshLambertMaterial({color: color});
     var upperLeftLeg = new THREE.Mesh(upperLeftLegGeometry, upperLeftLegMaterial);
 
+    body.push(upperLeftLeg);
+    upperLeftLeg.name = "upperLeftLeg";
     upperLeftLeg.position.set(0.4, -2.3, 0);
 
     //Lower Left leg
@@ -136,6 +159,8 @@ function initCharacter(role, skin){
     var lowerLeftLegMaterial = new THREE.MeshLambertMaterial({color: color});
     var lowerLeftLeg = new THREE.Mesh(lowerLeftLegGeometry, lowerLeftLegMaterial);
 
+    body.push(lowerLeftLeg);
+    lowerLeftLeg.name = "lowerLeftLeg";
     lowerLeftLeg.position.set(0.4, -1.4, 0);
 
     //Left Leg
@@ -148,18 +173,23 @@ function initCharacter(role, skin){
     var headMaterial = new THREE.MeshLambertMaterial({color: skincolor});
     var head = new THREE.Mesh(headGeometry, headMaterial);
 
+    body.push(head);
+    head.name = "head";
     head.position.set(0, 1.375, 0);
 
     //Character
-    var character = new THREE.Group();
-    character.add(torso);
-    character.add(rightArm);
-    character.add(leftArm);
-    character.add(rightLeg);
-    character.add(leftLeg);
-    character.add(head);
+    var player = new THREE.Group();
+    player.add(torso);
+    player.add(rightArm);
+    player.add(leftArm);
+    player.add(rightLeg);
+    player.add(leftLeg);
+    player.add(head);
 
-    return character;
+    player.name = "player";
+    body.push(player);
+
+    return player;
 }
 
 camera.up.set(0, 0, 1);
@@ -302,7 +332,7 @@ function loadEnvironment(){
         prison.rotation.x = Math.PI / 2;
         prison.position.z += 0.1; //Does't glitch with the ground
         prison.scale.set(15, 15, 15)
-        scene.add(prison);
+        // scene.add(prison);
     });
 }
 
@@ -386,7 +416,7 @@ function changeTeam(newTeam) {
         player.position.set(1.5, -2, 2.85);
 
         scene.add(player);
-    } else if(team = 'Citizen'){
+    } else if(team == 'Citizen'){
         player = undefined;
         
         player = new initCharacter('Citizen', 'Tan');
@@ -394,7 +424,7 @@ function changeTeam(newTeam) {
         player.position.set(1.5, -2, 2.85);
 
         scene.add(player);
-    } else if(team = 'Police'){
+    } else if(team == 'Police'){
         player = undefined;
         
         player = new initCharacter('Police', 'Tan');
@@ -414,10 +444,21 @@ function onWindowResize() {
 };
 
 function render() {
+    updateControls();
+
+    if(controls.enabled){
+        // console.log(body[window[guiControls.mesh].name]);
+        // window[body[window[guiControls.mesh].name]].rotation.x = guiControls.rotationX;
+        // body[window[guiControls.mesh].name].rotation.y = guiControls.rotationY;
+        // body[window[guiControls.mesh].name].rotation.z = guiControls.rotationZ;
+
+        // body[window[guiControls.mesh].name].position.x = guiControls.positionX;
+        // body[window[guiControls.mesh].name].position.y = guiControls.positionY;
+        // body[window[guiControls.mesh].name].position.z = guiControls.positionZ;
+    }
+
     requestAnimationFrame(render);
     renderer.render(scene, camera);
-
-    updateControls();
 };
 
 function toScreenPosition(obj, cam) {
@@ -442,6 +483,7 @@ function toScreenPosition(obj, cam) {
 //Keys
 document.addEventListener('keydown', (event) => {
     keysPressed[event.key.toLowerCase()] = true;
+
 }, false);
 document.addEventListener('keyup', (event) => {
     keysPressed[event.key.toLowerCase()] = false;
@@ -452,3 +494,27 @@ window.addEventListener('resize', onWindowResize, false);
 document.getElementById("scene").appendChild(renderer.domElement);
 render();
 loadEnvironment();
+
+var guiControls = new function(){
+    this.mesh = 'player';
+
+    this.rotationX = Math.PI * 0.5;
+    this.rotationY = -Math.PI / 2;
+    this.rotationZ = Math.PI * 2;
+
+    this.positionX = 1.5;
+    this.positionY = -2;
+    this.positionZ = 2.85;
+}
+
+datGUI.add(guiControls, 'mesh', ['player', 'torso', 'head', 'upperLeftArm', 'upperRightArm', 'lowerLeftArm', 'lowerRightArm', 'upperLeftLeg', 'upperRightLeg', 'lowerLeftLeg', 'lowerRightLeg']); //Mesh
+
+let positionFolder = datGUI.addFolder('Position'); //Position
+positionFolder.add(guiControls, 'positionX', 0, 10);
+positionFolder.add(guiControls, 'positionY', 0, 10);
+positionFolder.add(guiControls, 'positionZ', 0, 10);
+
+let rotationFolder = datGUI.addFolder('Rotation'); //Rotation
+rotationFolder.add(guiControls, 'rotationX', 0, 10);
+rotationFolder.add(guiControls, 'rotationY', 0, 10);
+rotationFolder.add(guiControls, 'rotationZ', 0, 10);
