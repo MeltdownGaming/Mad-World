@@ -28,13 +28,6 @@ body {
     transform: translate(50%, 0%);
 }
 
-#prisonerBtn {
-    top: 50%;
-    left: calc(50% - 175px);
-    transform: translate(-50%, -50%);
-    background-color: rgb(254, 115, 0);
-}
-
 #prisonerBtn img {
     margin-left: 30px;
     margin-top: 10px;
@@ -61,6 +54,13 @@ body {
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
+}
+
+#prisonerBtn {
+    top: 50%;
+    left: calc(50% - 175px);
+    transform: translate(-50%, -50%);
+    background-color: rgb(254, 115, 0);
 }
 
 #citizenBtn { 
