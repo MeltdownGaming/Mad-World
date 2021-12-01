@@ -11,7 +11,7 @@ var playerSettings = {
     sprintSpeed: 0.4
 }
 
-var body = [];
+var body = {};
 
 var datGUI = new dat.GUI();
 
@@ -53,8 +53,7 @@ function initCharacter(role, skin){
     let color;
     let skincolor;
 
-    console.log(role);
-
+    //Clothes
     if(role == 'Prisoner') {
         color = 0xFE7300;
     } else if(role == 'Police') {
@@ -63,6 +62,7 @@ function initCharacter(role, skin){
         color = 0xBFBDBD;
     }
 
+    //Skin
     if(skin == 'Tan'){
         skincolor = 0xF1C27D;
     }
@@ -72,8 +72,7 @@ function initCharacter(role, skin){
     var torsoMaterial = new THREE.MeshLambertMaterial({color: color});
     var torso = new THREE.Mesh(torsoGeometry, torsoMaterial);
 
-    body.push(torso);
-    torso.name = "torso";
+    body['torso'] = torso;
     torso.position.set(0, 0, 0);
 
     //Upper Right arm
@@ -81,8 +80,7 @@ function initCharacter(role, skin){
     var upperRightArmMaterial = new THREE.MeshLambertMaterial({color: color});
     var upperRightArm = new THREE.Mesh(upperRightArmGeometry, upperRightArmMaterial);
 
-    body.push(upperRightArm);
-    upperRightArm.name = "upperRightArm";
+    body['upperRightArm'] = upperRightArm;
     upperRightArm.position.set(-1.2, 0.45, 0);
 
     //Lower Right Arm
@@ -90,8 +88,7 @@ function initCharacter(role, skin){
     var lowerRightArmMaterial = new THREE.MeshLambertMaterial({color: skincolor});
     var lowerRightArm = new THREE.Mesh(lowerRightArmGeometry, lowerRightArmMaterial);
 
-    body.push(lowerRightArm);
-    lowerRightArm.name = "lowerRightArm";
+    body['lowerRightArm'] = lowerRightArm;
     lowerRightArm.position.set(-1.2, -0.45, 0);
 
     //Right Arm
@@ -104,8 +101,7 @@ function initCharacter(role, skin){
     var upperLeftArmMaterial = new THREE.MeshLambertMaterial({color: color});
     var upperLeftArm = new THREE.Mesh(upperLeftArmGeometry, upperLeftArmMaterial);
 
-    body.push(upperLeftArm);
-    upperLeftArm.name = "upperLeftArm";
+    body['upperLeftArm'] = upperLeftArm;
     upperLeftArm.position.set(1.2, 0.45, 0);
 
     //Lower Left arm
@@ -113,8 +109,7 @@ function initCharacter(role, skin){
     var lowerLeftArmMaterial = new THREE.MeshLambertMaterial({color: skincolor});
     var lowerLeftArm = new THREE.Mesh(lowerLeftArmGeometry, lowerLeftArmMaterial);
 
-    body.push(lowerLeftArm);
-    lowerLeftArm.name = "lowerLeftArm";
+    body['lowerLeftArm'] = lowerLeftArm;
     lowerLeftArm.position.set(1.2, -0.45, 0);
 
     //Left Arm
@@ -127,8 +122,7 @@ function initCharacter(role, skin){
     var upperRightLegMaterial = new THREE.MeshLambertMaterial({color: color});
     var upperRightLeg = new THREE.Mesh(upperRightLegGeometry, upperRightLegMaterial);
 
-    body.push(upperRightLeg);
-    upperRightLeg.name = "upperRightLeg";
+    body['upperRightLeg'] = upperRightLeg;
     upperRightLeg.position.set(-0.4, -1.4, 0);
 
     //Lower Right leg
@@ -136,8 +130,7 @@ function initCharacter(role, skin){
     var lowerRightLegMaterial = new THREE.MeshLambertMaterial({color: color});
     var lowerRightLeg = new THREE.Mesh(lowerRightLegGeometry, lowerRightLegMaterial);
 
-    body.push(lowerRightLeg);
-    lowerRightLeg.name = "lowerRightLeg";
+    body['lowerRightLeg'] = lowerRightLeg;
     lowerRightLeg.position.set(-0.4, -2.3, 0);
 
     //Right Leg
@@ -150,8 +143,7 @@ function initCharacter(role, skin){
     var upperLeftLegMaterial = new THREE.MeshLambertMaterial({color: color});
     var upperLeftLeg = new THREE.Mesh(upperLeftLegGeometry, upperLeftLegMaterial);
 
-    body.push(upperLeftLeg);
-    upperLeftLeg.name = "upperLeftLeg";
+    body['upperLeftLeg'] = upperLeftLeg;
     upperLeftLeg.position.set(0.4, -2.3, 0);
 
     //Lower Left leg
@@ -159,8 +151,7 @@ function initCharacter(role, skin){
     var lowerLeftLegMaterial = new THREE.MeshLambertMaterial({color: color});
     var lowerLeftLeg = new THREE.Mesh(lowerLeftLegGeometry, lowerLeftLegMaterial);
 
-    body.push(lowerLeftLeg);
-    lowerLeftLeg.name = "lowerLeftLeg";
+    body['lowerLeftLeg'] = lowerLeftLeg;
     lowerLeftLeg.position.set(0.4, -1.4, 0);
 
     //Left Leg
@@ -173,8 +164,7 @@ function initCharacter(role, skin){
     var headMaterial = new THREE.MeshLambertMaterial({color: skincolor});
     var head = new THREE.Mesh(headGeometry, headMaterial);
 
-    body.push(head);
-    head.name = "head";
+    body['head'] = head;
     head.position.set(0, 1.375, 0);
 
     //Character
@@ -186,9 +176,7 @@ function initCharacter(role, skin){
     player.add(leftLeg);
     player.add(head);
 
-    player.name = "player";
-    body.push(player);
-
+    body['player'] = player;
     return player;
 }
 
@@ -447,14 +435,13 @@ function render() {
     updateControls();
 
     if(controls.enabled){
-        // console.log(body[window[guiControls.mesh].name]);
-        // window[body[window[guiControls.mesh].name]].rotation.x = guiControls.rotationX;
-        // body[window[guiControls.mesh].name].rotation.y = guiControls.rotationY;
-        // body[window[guiControls.mesh].name].rotation.z = guiControls.rotationZ;
+        body[guiControls.mesh].rotation.x = guiControls.rotationX;
+        body[guiControls.mesh].rotation.y = guiControls.rotationY;
+        body[guiControls.mesh].rotation.z = guiControls.rotationZ;
 
-        // body[window[guiControls.mesh].name].position.x = guiControls.positionX;
-        // body[window[guiControls.mesh].name].position.y = guiControls.positionY;
-        // body[window[guiControls.mesh].name].position.z = guiControls.positionZ;
+        body[guiControls.mesh].position.x = guiControls.positionX;
+        body[guiControls.mesh].position.y = guiControls.positionY;
+        body[guiControls.mesh].position.z = guiControls.positionZ;
     }
 
     requestAnimationFrame(render);
@@ -495,6 +482,7 @@ document.getElementById("scene").appendChild(renderer.domElement);
 render();
 loadEnvironment();
 
+//Dat.GUI
 var guiControls = new function(){
     this.mesh = 'player';
 
@@ -510,11 +498,16 @@ var guiControls = new function(){
 datGUI.add(guiControls, 'mesh', ['player', 'torso', 'head', 'upperLeftArm', 'upperRightArm', 'lowerLeftArm', 'lowerRightArm', 'upperLeftLeg', 'upperRightLeg', 'lowerLeftLeg', 'lowerRightLeg']); //Mesh
 
 let positionFolder = datGUI.addFolder('Position'); //Position
-positionFolder.add(guiControls, 'positionX', 0, 10);
-positionFolder.add(guiControls, 'positionY', 0, 10);
-positionFolder.add(guiControls, 'positionZ', 0, 10);
+positionFolder.add(guiControls, 'positionX', 0, 20);
+positionFolder.add(guiControls, 'positionY', 0, 20);
+positionFolder.add(guiControls, 'positionZ', 0, 20);
 
 let rotationFolder = datGUI.addFolder('Rotation'); //Rotation
-rotationFolder.add(guiControls, 'rotationX', 0, 10);
-rotationFolder.add(guiControls, 'rotationY', 0, 10);
-rotationFolder.add(guiControls, 'rotationZ', 0, 10);
+rotationFolder.add(guiControls, 'rotationX', 0, 20);
+rotationFolder.add(guiControls, 'rotationY', 0, 20);
+rotationFolder.add(guiControls, 'rotationZ', 0, 20);
+
+//Animating
+let tl = new TimelineMax().delay(3);
+console.log(body[guiControls])
+tl.to(body[guiControls.mesh].scale, 1, {x: 2, ease: Expo.easeOut})
