@@ -1,6 +1,6 @@
 //Walk Animations:
-//Make body a dictionary so the key can be a string and the value can be the mesh needed to be manipulated
-//Design Course Video for tweening (cubes)
+//Work on walking animations
+//Trigger character animations when keys are pressed.
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 var renderer = new THREE.WebGLRenderer();
@@ -96,6 +96,8 @@ function initCharacter(role, skin){
     rightArm.add(upperRightArm);
     rightArm.add(lowerRightArm);
 
+    body['rightArm'] = rightArm;
+
     //Upper Left arm
     var upperLeftArmGeometry = facetedBox(1, 1.1, 1, 0.1, false);
     var upperLeftArmMaterial = new THREE.MeshLambertMaterial({color: color});
@@ -116,6 +118,8 @@ function initCharacter(role, skin){
     var leftArm = new THREE.Group();
     leftArm.add(upperLeftArm);
     leftArm.add(lowerLeftArm);
+
+    body['leftArm'] = leftArm;
 
     //Upper Right leg
     var upperRightLegGeometry = facetedBox(0.9, 1.1, 1, 0.1, false);
@@ -138,6 +142,8 @@ function initCharacter(role, skin){
     rightLeg.add(upperRightLeg);
     rightLeg.add(lowerRightLeg);
 
+    body['rightLeg'] = rightLeg;
+
     //Upper Left leg
     var upperLeftLegGeometry = facetedBox(0.9, 1.1, 1, 0.1, false);
     var upperLeftLegMaterial = new THREE.MeshLambertMaterial({color: color});
@@ -158,6 +164,8 @@ function initCharacter(role, skin){
     var leftLeg = new THREE.Group();
     leftLeg.add(upperLeftLeg);
     leftLeg.add(lowerLeftLeg);
+
+    body['leftLeg'] = leftLeg;
 
     //Head
     var headGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.75, 32);
@@ -435,13 +443,7 @@ function render() {
     updateControls();
 
     if(controls.enabled){
-        body[guiControls.mesh].rotation.x = guiControls.rotationX;
-        body[guiControls.mesh].rotation.y = guiControls.rotationY;
-        body[guiControls.mesh].rotation.z = guiControls.rotationZ;
-
-        body[guiControls.mesh].position.x = guiControls.positionX;
-        body[guiControls.mesh].position.y = guiControls.positionY;
-        body[guiControls.mesh].position.z = guiControls.positionZ;
+        timeline();
     }
 
     requestAnimationFrame(render);
@@ -482,32 +484,30 @@ document.getElementById("scene").appendChild(renderer.domElement);
 render();
 loadEnvironment();
 
-//Dat.GUI
-var guiControls = new function(){
-    this.mesh = 'player';
-
-    this.rotationX = Math.PI * 0.5;
-    this.rotationY = -Math.PI / 2;
-    this.rotationZ = Math.PI * 2;
-
-    this.positionX = 1.5;
-    this.positionY = -2;
-    this.positionZ = 2.85;
-}
-
-datGUI.add(guiControls, 'mesh', ['player', 'torso', 'head', 'upperLeftArm', 'upperRightArm', 'lowerLeftArm', 'lowerRightArm', 'upperLeftLeg', 'upperRightLeg', 'lowerLeftLeg', 'lowerRightLeg']); //Mesh
-
-let positionFolder = datGUI.addFolder('Position'); //Position
-positionFolder.add(guiControls, 'positionX', 0, 20);
-positionFolder.add(guiControls, 'positionY', 0, 20);
-positionFolder.add(guiControls, 'positionZ', 0, 20);
-
-let rotationFolder = datGUI.addFolder('Rotation'); //Rotation
-rotationFolder.add(guiControls, 'rotationX', 0, 20);
-rotationFolder.add(guiControls, 'rotationY', 0, 20);
-rotationFolder.add(guiControls, 'rotationZ', 0, 20);
-
 //Animating
-let tl = new TimelineMax().delay(3);
-console.log(body[guiControls])
-tl.to(body[guiControls.mesh].scale, 1, {x: 2, ease: Expo.easeOut})
+function timeline(){
+    timeline = function(){}; //One time function
+
+    let tl = new TimelineMax().delay(1);
+
+    //Walk
+
+    //Left Arm
+    tl.to(body['upperLeftArm'].rotation, 1, {x: Math.PI / 4, ease: Expo.easeOut});
+    tl.to(body['lowerLeftArm'].rotation, 1, {x: Math.PI / 4, ease: Expo.easeOut}, "-=1");
+    tl.to(body['lowerLeftArm'].position, 1, {y: -0.2, ease: Expo.easeOut}, "-=1");
+    tl.to(body['lowerLeftArm'].position, 1, {z: -0.7, ease: Expo.easeOut}, "-=1");
+
+    tl.to(body['lowerLeftArm'].rotation, 1, {y: Math.PI / 16, ease: Expo.easeOut}, "-=1");
+    tl.to(body['leftArm'].rotation, 1, {y: Math.PI / 16, ease: Expo.easeOut}, "-=1");
+
+    //Right Arm
+    tl.to(body['upperRightArm'].rotation, 1, {x: Math.PI / 4, ease: Expo.easeOut}, "-=1");
+    tl.to(body['lowerRightArm'].rotation, 1, {x: Math.PI / 4, ease: Expo.easeOut}, "-=1");
+    tl.to(body['lowerRightArm'].position, 1, {y: -0.2, ease: Expo.easeOut}, "-=1");
+    tl.to(body['lowerRightArm'].position, 1, {z: -0.7, ease: Expo.easeOut}, "-=1");
+
+    tl.to(body['lowerRightArm'].rotation, 1, {y: -Math.PI / 16, ease: Expo.easeOut}, "-=1");
+    tl.to(body['rightArm'].rotation, 1, {y: -Math.PI / 16, ease: Expo.easeOut}, "-=1");
+    tl.to(body['rightArm'].rotation, 1, {x: Math.PI * 3/4, ease: Expo.easeOut}, "-=1"); //Fix
+}
