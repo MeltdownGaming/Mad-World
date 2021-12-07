@@ -1,6 +1,4 @@
-//Walk Animations:
-//Work on walking animations
-//Trigger character animations when keys are pressed.
+//Create phone and money UI
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 var renderer = new THREE.WebGLRenderer();
@@ -13,8 +11,6 @@ var playerSettings = {
 }
 
 var body = {};
-
-var datGUI = new dat.GUI();
 
 var team = 'Citizen';
 var player;
@@ -325,13 +321,11 @@ function loadEnvironment(){
     scene.add(plane);
 
     //Map
-    objLoader.load('test.obj', function(prison){
+    objLoader.load('prison.obj', function(prison){
         prison.rotation.x = Math.PI / 2;
         prison.position.z += 0.1; //Does't glitch with the ground
         prison.scale.set(15, 15, 15)
         scene.add(prison);
-
-        // prison.children[2].visible = false;
     });
 }
 

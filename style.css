@@ -1,3 +1,11 @@
+:root {
+    --phone-height: 300px;
+    --phone-width: 180px;
+    --phone-top-height: 30px;
+    --phone-bottom-height: 30px;
+    --phone-screen-margin: 5px;
+}
+
 body {
     margin: 0;
     overflow: hidden;
@@ -74,4 +82,66 @@ body {
     left: calc(50% + 175px);
     transform: translate(-50%, -50%);
     background-color: rgb(52, 122, 202);
+}
+
+#phone {
+    bottom: 20px;
+    left: 20px;
+    width: var(--phone-width);
+    height: var(--phone-height);
+    background-color: rgb(66, 65, 65);
+    border-radius: 20px;
+}
+
+#phone-top {
+    border-radius: 20px 20px 0px 0px;
+    height: var(--phone-top-height);
+    background-color: black;
+}
+
+#phone-bottom {
+    border-radius: 0px 0px 20px 20px;
+    height: var(--phone-bottom-height);
+    background-color: black;
+    margin-top: calc(var(--phone-height) - var(--phone-bottom-height) - var(--phone-top-height));
+}
+
+#phone-button-home {
+    position: absolute;
+    background-color: rgb(66, 65, 65);
+    outline: 2px solid white;
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    margin-left: calc(50% - 10px);
+    margin-top: calc(var(--phone-height) - var(--phone-bottom-height) - var(--phone-top-height) + 35px);
+}
+
+#phone-button-home-square {
+    position: absolute;
+    background-color: white;
+    width: 8px;
+    height: 8px;
+    margin-left: calc(50% - 4px);
+    margin-top: 6px;
+}
+
+#phone-signal-bar {
+    width: 30px;
+    height: 5px;
+    background-color: white;
+    border-radius: 5px;
+    position: absolute;
+    margin-top: calc((var(--phone-top-height) / 2) - 5px); /* Not half because wanted to make it a little higher */
+    margin-left: calc(50% - 15px);
+}
+
+#phone-screen {
+    width: calc(var(--phone-width) - 10px);
+    margin-left: var(--phone-screen-margin);
+    margin-top: calc(var(--phone-top-height) + var(--phone-screen-margin));
+    height: calc(100% - var(--phone-top-height) - var(--phone-bottom-height) - (var(--phone-screen-margin) * 2));
+    background-color: #90d5ec;
+    background-image: linear-gradient(315deg, #90d5ec 0%, #fc575e 74%);    
+    position: absolute;
 }
