@@ -8,7 +8,8 @@ var renderer = new THREE.WebGLRenderer();
 var playerSettings = {
     turnSpeed: Math.PI * 0.01,
     speed: 0.2,
-    sprintSpeed: 0.4
+    sprintSpeed: 0.4,
+    animCycleDur: 1
 }
 
 var body = {};
@@ -324,11 +325,13 @@ function loadEnvironment(){
     scene.add(plane);
 
     //Map
-    objLoader.load('prison.obj', function(prison){
+    objLoader.load('test.obj', function(prison){
         prison.rotation.x = Math.PI / 2;
         prison.position.z += 0.1; //Does't glitch with the ground
         prison.scale.set(15, 15, 15)
-        // scene.add(prison);
+        scene.add(prison);
+
+        // prison.children[2].visible = false;
     });
 }
 
@@ -442,10 +445,6 @@ function onWindowResize() {
 function render() {
     updateControls();
 
-    if(controls.enabled){
-        timeline();
-    }
-
     requestAnimationFrame(render);
     renderer.render(scene, camera);
 };
@@ -493,21 +492,38 @@ function timeline(){
     //Walk
 
     //Left Arm
-    tl.to(body['upperLeftArm'].rotation, 1, {x: Math.PI / 4, ease: Expo.easeOut});
-    tl.to(body['lowerLeftArm'].rotation, 1, {x: Math.PI / 4, ease: Expo.easeOut}, "-=1");
-    tl.to(body['lowerLeftArm'].position, 1, {y: -0.2, ease: Expo.easeOut}, "-=1");
-    tl.to(body['lowerLeftArm'].position, 1, {z: -0.7, ease: Expo.easeOut}, "-=1");
+    tl.to(body['upperLeftArm'].rotation, playerSettings.animCycleDur, {x: Math.PI / 4, ease: Expo.easeOut});
+    tl.to(body['lowerLeftArm'].rotation, playerSettings.animCycleDur, {x: Math.PI / 4, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
+    tl.to(body['lowerLeftArm'].position, playerSettings.animCycleDur, {y: -0.2, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
+    tl.to(body['lowerLeftArm'].position, playerSettings.animCycleDur, {z: -0.7, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
 
-    tl.to(body['lowerLeftArm'].rotation, 1, {y: Math.PI / 16, ease: Expo.easeOut}, "-=1");
-    tl.to(body['leftArm'].rotation, 1, {y: Math.PI / 16, ease: Expo.easeOut}, "-=1");
+    tl.to(body['lowerLeftArm'].rotation, playerSettings.animCycleDur, {y: Math.PI / 16, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
+    tl.to(body['leftArm'].rotation, playerSettings.animCycleDur, {y: Math.PI / 16, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
 
     //Right Arm
-    tl.to(body['upperRightArm'].rotation, 1, {x: Math.PI / 4, ease: Expo.easeOut}, "-=1");
-    tl.to(body['lowerRightArm'].rotation, 1, {x: Math.PI / 4, ease: Expo.easeOut}, "-=1");
-    tl.to(body['lowerRightArm'].position, 1, {y: -0.2, ease: Expo.easeOut}, "-=1");
-    tl.to(body['lowerRightArm'].position, 1, {z: -0.7, ease: Expo.easeOut}, "-=1");
+    tl.to(body['upperRightArm'].rotation, playerSettings.animCycleDur, {x: -Math.PI / 4, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
+    tl.to(body['lowerRightArm'].rotation, playerSettings.animCycleDur, {x: -Math.PI / 4, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
+    tl.to(body['lowerRightArm'].position, playerSettings.animCycleDur, {y: -0.2, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
+    tl.to(body['lowerRightArm'].position, playerSettings.animCycleDur, {z: 0.7, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
 
-    tl.to(body['lowerRightArm'].rotation, 1, {y: -Math.PI / 16, ease: Expo.easeOut}, "-=1");
-    tl.to(body['rightArm'].rotation, 1, {y: -Math.PI / 16, ease: Expo.easeOut}, "-=1");
-    tl.to(body['rightArm'].rotation, 1, {x: Math.PI * 3/4, ease: Expo.easeOut}, "-=1"); //Fix
+    tl.to(body['lowerRightArm'].rotation, playerSettings.animCycleDur, {y: -Math.PI / 16, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
+    tl.to(body['rightArm'].rotation, playerSettings.animCycleDur, {y: Math.PI / 16, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
+
+    //Left Leg
+    tl.to(body['lowerLeftLeg'].rotation, playerSettings.animCycleDur, {x: -Math.PI / 4, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
+    tl.to(body['upperLeftLeg'].rotation, playerSettings.animCycleDur, {x: -Math.PI / 4, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
+    tl.to(body['upperLeftLeg'].position, playerSettings.animCycleDur, {y: -1.9, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
+    tl.to(body['upperLeftLeg'].position, playerSettings.animCycleDur, {z: 0.5, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
+
+    tl.to(body['upperLeftLeg'].rotation, playerSettings.animCycleDur, {y: Math.PI / 16, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
+    tl.to(body['leftArm'].rotation, playerSettings.animCycleDur, {y: Math.PI / 16, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
+
+    //Right Leg
+    tl.to(body['upperRightLeg'].rotation, playerSettings.animCycleDur, {x: Math.PI / 4, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
+    tl.to(body['lowerRightLeg'].rotation, playerSettings.animCycleDur, {x: Math.PI / 4, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
+    tl.to(body['lowerRightLeg'].position, playerSettings.animCycleDur, {y: -1.9, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
+    tl.to(body['lowerRightLeg'].position, playerSettings.animCycleDur, {z: -0.5, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
+
+    tl.to(body['lowerRightLeg'].rotation, playerSettings.animCycleDur, {y: Math.PI / 16, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
+    tl.to(body['rightLeg'].rotation, playerSettings.animCycleDur, {y: Math.PI / 16, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
 }
