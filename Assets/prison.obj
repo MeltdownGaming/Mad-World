@@ -1,6 +1,6 @@
 # Blender v2.93.2 OBJ File: 'Prison.blend'
 # www.blender.org
-mtllib prison.mtl
+mtllib Prison.mtl
 o Plane
 v -0.232468 0.417654 0.337434
 v 0.337434 0.417654 0.337434
