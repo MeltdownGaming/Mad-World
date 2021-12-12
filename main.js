@@ -1,4 +1,5 @@
 //Create phone and money UI
+//Line 409! Display of phone when m key is pressed.
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 var renderer = new THREE.WebGLRenderer();
@@ -12,14 +13,18 @@ var playerSettings = {
 
 var body = {};
 
-var team = 'Citizen';
-var player;
+let team = 'Citizen';
+let phoneState = false;
+let phone = document.getElementById("phone");
+let player;
 
 //OBJ Loader
 var objLoader = new THREE.OBJLoader();
 objLoader.setPath('Assets/');
 
 const keysPressed = {};
+
+//Movement Controls
 const KEY_UP = 'arrowup';
 const KEY_LEFT = 'arrowleft';
 const KEY_DOWN = 'arrowdown';
@@ -29,6 +34,9 @@ const KEY_A = 'a';
 const KEY_S = 's';
 const KEY_D = 'd';
 const KEY_SHIFT = 'shift';
+
+//Game keybinds
+const KEY_M = 'm';
 
 renderer.setClearColor(0x87CEEB);
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -338,6 +346,7 @@ function initControls() {
 }
 
 function updateControls(){
+    //Movement Controls
     if(controls.enabled){
         controls.target.copy(player.position);
 
@@ -395,6 +404,9 @@ function updateControls(){
             }
         }
     }
+
+    //Game Keybinds
+
 }
 
 function changeTeam(newTeam) {
@@ -465,9 +477,12 @@ function toScreenPosition(obj, cam) {
 //Keys
 document.addEventListener('keydown', (event) => {
     keysPressed[event.key.toLowerCase()] = true;
-
 }, false);
 document.addEventListener('keyup', (event) => {
+    if(keysPressed[KEY_M]) {
+        updatePhoneState();
+    }
+
     keysPressed[event.key.toLowerCase()] = false;
 }, false);
 
@@ -520,4 +535,18 @@ function timeline(){
 
     tl.to(body['lowerRightLeg'].rotation, playerSettings.animCycleDur, {y: Math.PI / 16, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
     tl.to(body['rightLeg'].rotation, playerSettings.animCycleDur, {y: Math.PI / 16, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
+}
+
+function updatePhoneState() {
+    if(phoneState){
+        phoneState = false;
+    } else {
+        phoneState = true;
+    }
+
+    if(phoneState) {
+        phone.style.visibility = "visible";
+    } else {
+        phone.style.visibility = "hidden";
+    }
 }
