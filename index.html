@@ -44,11 +44,21 @@
         </div>
     </div>
 
+    <!-- Money -->
+    <div id="money" class="ui">
+        <span class="dollarSign">$<span id="userMoney"></span></span>
+        
+    </div>
+
     <!-- Phone -->
     <div id="phone" class="ui">
-        <div id="phone-screen"></div>
+        <div id="phone-screen">
+            <div class="phone-apps" id="phone-app-stats" onclick="toggleMood()">
+                <img src="Assets/stats.png" class="notDraggable">
+            </div>
+        </div>
         <!-- Phone Details -->
-        <div id="phone-button-home">
+        <div id="phone-button-home" onclick="togglePhone()">
             <div id="phone-button-home-square"></div>
         </div>
         <div id="phone-signal-bar"></div>
@@ -57,6 +67,8 @@
         <div id="phone-top"></div>
         <div id="phone-bottom"></div>
     </div>
+
+    <div id="mood" class="ui"></div>
 
     <!-- Javascript -->
     <script src='main.js'></script>

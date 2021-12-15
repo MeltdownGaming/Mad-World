@@ -1,25 +1,30 @@
 //Create phone and money UI
 //Line 409! Display of phone when m key is pressed.
-var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-var renderer = new THREE.WebGLRenderer();
+let scene = new THREE.Scene();
+let camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+let renderer = new THREE.WebGLRenderer();
 
-var playerSettings = {
+let playerSettings = {
     turnSpeed: Math.PI * 0.01,
     speed: 0.2,
     sprintSpeed: 0.4,
     animCycleDur: 1
 }
 
-var body = {};
+let body = {};
 
+//Game references
 let team = 'Citizen';
 let phoneState = false;
-let phone = document.getElementById("phone");
+let moodState = false;
+let cash = 0;
+
+let phoneDiv = document.getElementById("phone");
+let moodDiv = document.getElementById("mood");
 let player;
 
 //OBJ Loader
-var objLoader = new THREE.OBJLoader();
+let objLoader = new THREE.OBJLoader();
 objLoader.setPath('Assets/');
 
 const keysPressed = {};
@@ -42,10 +47,10 @@ renderer.setClearColor(0x87CEEB);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 
-var ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+let ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
 scene.add(ambientLight);
 
-var spotLight = new THREE.SpotLight(0xffffff, 0.85, 1000, Math.PI / 2);
+let spotLight = new THREE.SpotLight(0xffffff, 0.85, 1000, Math.PI / 2);
 spotLight.position.set(50, 10, 50);
 spotLight.target.position.x = 20;
 scene.add(spotLight);
@@ -73,115 +78,115 @@ function initCharacter(role, skin){
     }
 
     //Torso
-    var torsoGeometry = facetedBox(1.75, 2, 1, 0.1, false);
-    var torsoMaterial = new THREE.MeshLambertMaterial({color: color});
-    var torso = new THREE.Mesh(torsoGeometry, torsoMaterial);
+    let torsoGeometry = facetedBox(1.75, 2, 1, 0.1, false);
+    let torsoMaterial = new THREE.MeshLambertMaterial({color: color});
+    let torso = new THREE.Mesh(torsoGeometry, torsoMaterial);
 
     body['torso'] = torso;
     torso.position.set(0, 0, 0);
 
     //Upper Right arm
-    var upperRightArmGeometry = facetedBox(1, 1.1, 1, 0.1, false);
-    var upperRightArmMaterial = new THREE.MeshLambertMaterial({color: color});
-    var upperRightArm = new THREE.Mesh(upperRightArmGeometry, upperRightArmMaterial);
+    let upperRightArmGeometry = facetedBox(1, 1.1, 1, 0.1, false);
+    let upperRightArmMaterial = new THREE.MeshLambertMaterial({color: color});
+    let upperRightArm = new THREE.Mesh(upperRightArmGeometry, upperRightArmMaterial);
 
     body['upperRightArm'] = upperRightArm;
     upperRightArm.position.set(-1.2, 0.45, 0);
 
     //Lower Right Arm
-    var lowerRightArmGeometry = facetedBox(1, 1.1, 1, 0.1, false);
-    var lowerRightArmMaterial = new THREE.MeshLambertMaterial({color: skincolor});
-    var lowerRightArm = new THREE.Mesh(lowerRightArmGeometry, lowerRightArmMaterial);
+    let lowerRightArmGeometry = facetedBox(1, 1.1, 1, 0.1, false);
+    let lowerRightArmMaterial = new THREE.MeshLambertMaterial({color: skincolor});
+    let lowerRightArm = new THREE.Mesh(lowerRightArmGeometry, lowerRightArmMaterial);
 
     body['lowerRightArm'] = lowerRightArm;
     lowerRightArm.position.set(-1.2, -0.45, 0);
 
     //Right Arm
-    var rightArm = new THREE.Group();
+    let rightArm = new THREE.Group();
     rightArm.add(upperRightArm);
     rightArm.add(lowerRightArm);
 
     body['rightArm'] = rightArm;
 
     //Upper Left arm
-    var upperLeftArmGeometry = facetedBox(1, 1.1, 1, 0.1, false);
-    var upperLeftArmMaterial = new THREE.MeshLambertMaterial({color: color});
-    var upperLeftArm = new THREE.Mesh(upperLeftArmGeometry, upperLeftArmMaterial);
+    let upperLeftArmGeometry = facetedBox(1, 1.1, 1, 0.1, false);
+    let upperLeftArmMaterial = new THREE.MeshLambertMaterial({color: color});
+    let upperLeftArm = new THREE.Mesh(upperLeftArmGeometry, upperLeftArmMaterial);
 
     body['upperLeftArm'] = upperLeftArm;
     upperLeftArm.position.set(1.2, 0.45, 0);
 
     //Lower Left arm
-    var lowerLeftArmGeometry = facetedBox(1, 1.1, 1, 0.1, false);
-    var lowerLeftArmMaterial = new THREE.MeshLambertMaterial({color: skincolor});
-    var lowerLeftArm = new THREE.Mesh(lowerLeftArmGeometry, lowerLeftArmMaterial);
+    let lowerLeftArmGeometry = facetedBox(1, 1.1, 1, 0.1, false);
+    let lowerLeftArmMaterial = new THREE.MeshLambertMaterial({color: skincolor});
+    let lowerLeftArm = new THREE.Mesh(lowerLeftArmGeometry, lowerLeftArmMaterial);
 
     body['lowerLeftArm'] = lowerLeftArm;
     lowerLeftArm.position.set(1.2, -0.45, 0);
 
     //Left Arm
-    var leftArm = new THREE.Group();
+    let leftArm = new THREE.Group();
     leftArm.add(upperLeftArm);
     leftArm.add(lowerLeftArm);
 
     body['leftArm'] = leftArm;
 
     //Upper Right leg
-    var upperRightLegGeometry = facetedBox(0.9, 1.1, 1, 0.1, false);
-    var upperRightLegMaterial = new THREE.MeshLambertMaterial({color: color});
-    var upperRightLeg = new THREE.Mesh(upperRightLegGeometry, upperRightLegMaterial);
+    let upperRightLegGeometry = facetedBox(0.9, 1.1, 1, 0.1, false);
+    let upperRightLegMaterial = new THREE.MeshLambertMaterial({color: color});
+    let upperRightLeg = new THREE.Mesh(upperRightLegGeometry, upperRightLegMaterial);
 
     body['upperRightLeg'] = upperRightLeg;
     upperRightLeg.position.set(-0.4, -1.4, 0);
 
     //Lower Right leg
-    var lowerRightLegGeometry = facetedBox(0.9, 1.1, 1, 0.1, false);
-    var lowerRightLegMaterial = new THREE.MeshLambertMaterial({color: color});
-    var lowerRightLeg = new THREE.Mesh(lowerRightLegGeometry, lowerRightLegMaterial);
+    let lowerRightLegGeometry = facetedBox(0.9, 1.1, 1, 0.1, false);
+    let lowerRightLegMaterial = new THREE.MeshLambertMaterial({color: color});
+    let lowerRightLeg = new THREE.Mesh(lowerRightLegGeometry, lowerRightLegMaterial);
 
     body['lowerRightLeg'] = lowerRightLeg;
     lowerRightLeg.position.set(-0.4, -2.3, 0);
 
     //Right Leg
-    var rightLeg = new THREE.Group();
+    let rightLeg = new THREE.Group();
     rightLeg.add(upperRightLeg);
     rightLeg.add(lowerRightLeg);
 
     body['rightLeg'] = rightLeg;
 
     //Upper Left leg
-    var upperLeftLegGeometry = facetedBox(0.9, 1.1, 1, 0.1, false);
-    var upperLeftLegMaterial = new THREE.MeshLambertMaterial({color: color});
-    var upperLeftLeg = new THREE.Mesh(upperLeftLegGeometry, upperLeftLegMaterial);
+    let upperLeftLegGeometry = facetedBox(0.9, 1.1, 1, 0.1, false);
+    let upperLeftLegMaterial = new THREE.MeshLambertMaterial({color: color});
+    let upperLeftLeg = new THREE.Mesh(upperLeftLegGeometry, upperLeftLegMaterial);
 
     body['upperLeftLeg'] = upperLeftLeg;
     upperLeftLeg.position.set(0.4, -2.3, 0);
 
     //Lower Left leg
-    var lowerLeftLegGeometry = facetedBox(0.9, 1.1, 1, 0.1, false);
-    var lowerLeftLegMaterial = new THREE.MeshLambertMaterial({color: color});
-    var lowerLeftLeg = new THREE.Mesh(lowerLeftLegGeometry, lowerLeftLegMaterial);
+    let lowerLeftLegGeometry = facetedBox(0.9, 1.1, 1, 0.1, false);
+    let lowerLeftLegMaterial = new THREE.MeshLambertMaterial({color: color});
+    let lowerLeftLeg = new THREE.Mesh(lowerLeftLegGeometry, lowerLeftLegMaterial);
 
     body['lowerLeftLeg'] = lowerLeftLeg;
     lowerLeftLeg.position.set(0.4, -1.4, 0);
 
     //Left Leg
-    var leftLeg = new THREE.Group();
+    let leftLeg = new THREE.Group();
     leftLeg.add(upperLeftLeg);
     leftLeg.add(lowerLeftLeg);
 
     body['leftLeg'] = leftLeg;
 
     //Head
-    var headGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.75, 32);
-    var headMaterial = new THREE.MeshLambertMaterial({color: skincolor});
-    var head = new THREE.Mesh(headGeometry, headMaterial);
+    let headGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.75, 32);
+    let headMaterial = new THREE.MeshLambertMaterial({color: skincolor});
+    let head = new THREE.Mesh(headGeometry, headMaterial);
 
     body['head'] = head;
     head.position.set(0, 1.375, 0);
 
     //Character
-    var player = new THREE.Group();
+    let player = new THREE.Group();
     player.add(torso);
     player.add(rightArm);
     player.add(leftArm);
@@ -195,7 +200,7 @@ function initCharacter(role, skin){
 
 camera.up.set(0, 0, 1);
 
-var controls;
+let controls;
 initControls();
 controls.enabled = false;
 
@@ -317,8 +322,8 @@ function facetedBox(w, h, d, f, isWireframed){
     return geom;
 };
 
-var planeGeometry, planeMaterial, plane;
-var prison;
+let planeGeometry, planeMaterial, plane;
+let prison;
 function loadEnvironment(){
     //Ground
     planeGeometry = new THREE.PlaneGeometry(100, 100, 100, 100);
@@ -335,6 +340,8 @@ function loadEnvironment(){
         prison.scale.set(15, 15, 15)
         scene.add(prison);
     });
+
+    updateCash();
 }
 
 function initControls() {
@@ -345,7 +352,7 @@ function initControls() {
     controls.update();
 }
 
-function updateControls(){
+function update(){
     //Movement Controls
     if(controls.enabled){
         controls.target.copy(player.position);
@@ -404,9 +411,6 @@ function updateControls(){
             }
         }
     }
-
-    //Game Keybinds
-
 }
 
 function changeTeam(newTeam) {
@@ -449,17 +453,17 @@ function onWindowResize() {
 };
 
 function render() {
-    updateControls();
+    update();
 
     requestAnimationFrame(render);
     renderer.render(scene, camera);
 };
 
 function toScreenPosition(obj, cam) {
-    var vector = new THREE.Vector3();
+    let vector = new THREE.Vector3();
 
-    var widthHalf = 0.5 * renderer.context.canvas.width;
-    var heightHalf = 0.5 * renderer.context.canvas.height;
+    let widthHalf = 0.5 * renderer.context.canvas.width;
+    let heightHalf = 0.5 * renderer.context.canvas.height;
 
     obj.updateMatrixWorld();
     vector.setFromMatrixPosition(obj.matrixWorld);
@@ -480,7 +484,7 @@ document.addEventListener('keydown', (event) => {
 }, false);
 document.addEventListener('keyup', (event) => {
     if(keysPressed[KEY_M]) {
-        updatePhoneState();
+        togglePhone();
     }
 
     keysPressed[event.key.toLowerCase()] = false;
@@ -537,7 +541,8 @@ function timeline(){
     tl.to(body['rightLeg'].rotation, playerSettings.animCycleDur, {y: Math.PI / 16, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
 }
 
-function updatePhoneState() {
+//Updates and toggles out of render loop
+function togglePhone() {
     if(phoneState){
         phoneState = false;
     } else {
@@ -545,8 +550,36 @@ function updatePhoneState() {
     }
 
     if(phoneState) {
-        phone.style.visibility = "visible";
+        phoneDiv.style.visibility = "visible";
     } else {
-        phone.style.visibility = "hidden";
+        phoneDiv.style.visibility = "hidden";
+    }
+}
+
+function toggleMood() {
+    if(moodState){
+        moodState = false;
+    } else {
+        moodState = true;
+    }
+
+    if(moodState) {
+        moodDiv.style.visibility = "visible";
+    } else {
+        moodDiv.style.visibility = "hidden";
+    }
+}
+
+function updateCash(){
+    document.getElementById("userMoney").innerHTML = formatCash(cash);
+}
+
+//Tools
+function formatCash(money) {
+    if(money > 1000000){
+        let moneyStr = `${money / 1000000}m`
+        return moneyStr;
+    } else {
+        return money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 }
