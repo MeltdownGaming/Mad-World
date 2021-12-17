@@ -13,8 +13,8 @@
     --phone-apps-margin: 10px;
     --phone-apps-scale: 40px;
     /* Mood */
-    --mood-width: 300px;
-    --mood-height: 150px;
+    --mood-width: 350px;
+    --mood-height: 200px;
 }
 
 body {
@@ -194,6 +194,7 @@ body {
     width: 40px;
 }
 
+/* Mood */
 #mood {
     visibility: hidden;
     width: var(--mood-width);
@@ -205,7 +206,7 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
-#mood div {    
+.mood-quad {    
     width: calc(var(--mood-width) / 2 - 15px);
     height: calc(var(--mood-height) / 2 - 15px);
     position: relative;
@@ -219,22 +220,48 @@ body {
     top: 7px;
 }
 
+.mood-title {
+    font-size: 20px;
+}
+
 #mood-hunger {
     left: 10px;
     top: 10px;
 }
 
 #mood-energy {
-    left: 155px;
-    top: -50px;
+    left: 180px;
+    top: -75px;
 }
 
 #mood-hygiene {
-    bottom: 40px;
+    bottom: 65px;
     left: 10px;
 }
 
 #mood-entertainment {
-    bottom: 100px;
-    left: 155px;
+    bottom: 150px;
+    left: 180px;
+}
+
+.mood-progress {
+    position: relative;
+    left: 10px;
+    top: 20px;
+    height: 35px;
+    border-radius: 10px;
+    width: calc(var(--mood-width) / 2 - 35px);
+    background-color: lightgray;
+    overflow: hidden;
+}
+
+.mood-progress-fill {
+    width: 50%;
+    height: 100%;
+    background-color: rgb(23, 230, 23);
+    border-radius: 10px;
+}
+
+.mood-progress-percent {
+    font-size: 15px;
 }
