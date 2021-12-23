@@ -1,5 +1,4 @@
-//Create phone and money UI
-//Line 409! Display of phone when m key is pressed.
+//Working on mood progress bars
 let scene = new THREE.Scene();
 let camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 let renderer = new THREE.WebGLRenderer();
@@ -20,8 +19,22 @@ let moodState = false;
 let cash = 0;
 
 let phoneDiv = document.getElementById("phone");
-let moodDiv = document.getElementById("mood");
 let player;
+
+//Mood references
+let moodDiv = document.getElementById("mood");
+
+let hungerProg = document.getElementById("mood-hunger-fill");
+let hungerText = document.getElementById("mood-hunger-text");
+
+let energyProg = document.getElementById("mood-energy-fill");
+let energyText = document.getElementById("mood-energy-text");
+
+let hygieneProg = document.getElementById("mood-hygiene-fill");
+let hygieneText = document.getElementById("mood-hygiene-text");
+
+let entertainmentProg = document.getElementById("mood-entertainment-fill");
+let entertainmentText = document.getElementById("mood-entertainment-text");
 
 //OBJ Loader
 let objLoader = new THREE.OBJLoader();
@@ -541,7 +554,7 @@ function timeline(){
     tl.to(body['rightLeg'].rotation, playerSettings.animCycleDur, {y: Math.PI / 16, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
 }
 
-//Updates and toggles out of render loop
+//Toggles
 function togglePhone() {
     if(phoneState){
         phoneState = false;
@@ -570,8 +583,26 @@ function toggleMood() {
     }
 }
 
+//Updates
 function updateCash(){
     document.getElementById("userMoney").innerHTML = formatCash(cash);
+}
+
+function updateMood(mood, percentage) {
+    if(removePercentage(percentage) > 100){
+        percentage = '100%';
+    }
+
+    mood.style.width = percentage;
+    mood.children[0].innerHTML = percentage;
+
+    if(removePercentage(percentage) >= 70){ //Green
+        mood.style.background = "rgba(23, 230, 23, 1)";
+    } else if(removePercentage(percentage) >= 40){
+        mood.style.background = "rgba(238, 210, 2, 1)";
+    } else {
+        mood.style.background = "rgba(255, 0, 0, 1)";
+    }
 }
 
 //Tools
@@ -582,4 +613,9 @@ function formatCash(money) {
     } else {
         return money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
+}
+
+function removePercentage(str){
+    str = str.replace('%', '');
+    return str;
 }

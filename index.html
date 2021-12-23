@@ -11,12 +11,6 @@
     <script src='https://threejs.org/examples/js/controls/OrbitControls.js'></script>
     <script src='https://threejs.org/examples/js/loaders/OBJLoader.js'></script>
     <script src='https://threejs.org/examples/js/loaders/MTLLoader.js'></script>
-
-    <!-- Dat.gui -->
-    <script src="lib/dat.gui.min.js"></script>
-
-    <!-- Tween.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TweenMax.min.js"></script>
     
     <!-- Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -70,21 +64,42 @@
     <div id="mood" class="ui">
         <div class="mood-quad" id="mood-hunger">
             <span class="mood-title">Hunger</span>
+            
             <div class="mood-progress">
-                <div class="mood-progress-fill">
-                    <span class="mood-progress-percent">50%</span>
+                <div id="mood-hunger-fill" class="mood-progress-fill">
+                    <span id="mood-hunger-text" class="mood-progress-text">100%</span>
                 </div>
-
             </div>
         </div>
+
         <div class="mood-quad" id="mood-energy">
             <span class="mood-title">Energy</span>
+            
+            <div class="mood-progress">
+                <div id="mood-energy-fill" class="mood-progress-fill">
+                    <span id="mood-energy-text" class="mood-progress-text">100%</span>
+                </div>
+            </div>
         </div>
+
         <div class="mood-quad" id="mood-hygiene">
             <span class="mood-title">Hygiene</span>
+            
+            <div class="mood-progress">
+                <div id="mood-hygiene-fill" class="mood-progress-fill">
+                    <span id="mood-hygiene-text" class="mood-progress-text">100%</span>
+                </div>
+            </div>
         </div>
+
         <div class="mood-quad" id="mood-entertainment">
             <span class="mood-title">Entertainment</span>
+            
+            <div class="mood-progress">
+                <div id="mood-entertainment-fill" class="mood-progress-fill">
+                    <span id="mood-entertainment-text" class="mood-progress-text">100%</span>
+                </div>
+            </div>
         </div>
     </div>
 

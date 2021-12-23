@@ -256,12 +256,15 @@ body {
 }
 
 .mood-progress-fill {
-    width: 50%;
     height: 100%;
-    background-color: rgb(23, 230, 23);
     border-radius: 10px;
 }
 
-.mood-progress-percent {
+#mood-hunger-fill {
+    width: 100%;
+    background-color: rgb(23, 230, 23);
+}
+
+.mood-progress-text {
     font-size: 15px;
 }
