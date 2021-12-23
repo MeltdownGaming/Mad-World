@@ -598,10 +598,13 @@ function updateMood(mood, percentage) {
 
     if(removePercentage(percentage) >= 70){ //Green
         mood.style.background = "rgba(23, 230, 23, 1)";
+        mood.parentNode.style.background = "rgba(23, 230, 23, 0.4)";
     } else if(removePercentage(percentage) >= 40){
         mood.style.background = "rgba(238, 210, 2, 1)";
+        mood.parentNode.style.background = "rgba(238, 210, 2, 0.4)";
     } else {
         mood.style.background = "rgba(255, 0, 0, 1)";
+        mood.parentNode.style.background = "rgba(255, 0, 0, 0.4)";
     }
 }
 
