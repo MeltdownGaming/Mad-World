@@ -21,6 +21,8 @@ let cash = 0;
 let phoneDiv = document.getElementById("phone");
 let player;
 
+const moodDecreaseDuration = 4000;
+
 //Mood references
 let moodDiv = document.getElementById("mood");
 
@@ -591,6 +593,8 @@ function updateCash(){
 function updateMood(mood, percentage) {
     if(removePercentage(percentage) > 100){
         percentage = '100%';
+    } else if(removePercentage(percentage) <= 0){
+        percentage = '0%'
     }
 
     mood.style.width = percentage;
@@ -602,9 +606,11 @@ function updateMood(mood, percentage) {
     } else if(removePercentage(percentage) >= 40){
         mood.style.background = "rgba(238, 210, 2, 1)";
         mood.parentNode.style.background = "rgba(238, 210, 2, 0.4)";
-    } else {
+    } else if(removePercentage(percentage) > 0) {
         mood.style.background = "rgba(255, 0, 0, 1)";
         mood.parentNode.style.background = "rgba(255, 0, 0, 0.4)";
+    } else {
+        mood.parentNode.style.background = "rgba(255, 0, 0, 1)";
     }
 }
 
@@ -621,4 +627,14 @@ function formatCash(money) {
 function removePercentage(str){
     str = str.replace('%', '');
     return str;
+}
+
+//Mood decrease over time
+var moodInterval = setInterval(moodDecrease, moodDecreaseDuration);
+
+function moodDecrease() {
+    updateMood(hungerProg, `${removePercentage(hungerProg.children[0].innerHTML) - 1}%`);
+    updateMood(energyProg, `${removePercentage(energyProg.children[0].innerHTML) - 1}%`);
+    updateMood(hygieneProg, `${removePercentage(hygieneProg.children[0].innerHTML) - 1}%`);
+    updateMood(entertainmentProg, `${removePercentage(entertainmentProg.children[0].innerHTML) - 1}%`);
 }

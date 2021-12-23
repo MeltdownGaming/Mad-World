@@ -258,9 +258,6 @@ body {
 .mood-progress-fill {
     height: 100%;
     border-radius: 10px;
-}
-
-#mood-hunger-fill {
     width: 100%;
     background-color: rgb(23, 230, 23);
 }
