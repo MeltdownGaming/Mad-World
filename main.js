@@ -1,4 +1,4 @@
-//Working on mood progress bars
+//Errors in console because of some path errors.
 let scene = new THREE.Scene();
 let camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 let renderer = new THREE.WebGLRenderer();
@@ -40,7 +40,10 @@ let entertainmentText = document.getElementById("mood-entertainment-text");
 
 //OBJ Loader
 let objLoader = new THREE.OBJLoader();
-objLoader.setPath('Assets/');
+objLoader.setPath('./Models/');
+
+let mtlLoader = new THREE.MTLLoader();
+mtlLoader.setPath('./Models/');
 
 const keysPressed = {};
 
@@ -349,11 +352,16 @@ function loadEnvironment(){
     scene.add(plane);
 
     //Map
-    objLoader.load('prison.obj', function(prison){
-        prison.rotation.x = Math.PI / 2;
-        prison.position.z += 0.1; //Does't glitch with the ground
-        prison.scale.set(15, 15, 15)
-        scene.add(prison);
+    mtlLoader.load('Buildings/Bank.mtl', function(materials){
+        materials.preload();
+
+        objLoader.setMaterials(materials);
+        objLoader.load('Buildings/Bank.obj', function(prison){
+            prison.rotation.x = Math.PI / 2;
+            prison.position.z += 0.1; //Does't glitch with the ground
+            prison.scale.set(15, 15, 15)
+            scene.add(prison);
+        });
     });
 
     updateCash();
@@ -510,51 +518,6 @@ window.addEventListener('resize', onWindowResize, false);
 document.getElementById("scene").appendChild(renderer.domElement);
 render();
 loadEnvironment();
-
-//Animating
-function timeline(){
-    timeline = function(){}; //One time function
-
-    let tl = new TimelineMax().delay(1);
-
-    //Walk
-
-    //Left Arm
-    tl.to(body['upperLeftArm'].rotation, playerSettings.animCycleDur, {x: Math.PI / 4, ease: Expo.easeOut});
-    tl.to(body['lowerLeftArm'].rotation, playerSettings.animCycleDur, {x: Math.PI / 4, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
-    tl.to(body['lowerLeftArm'].position, playerSettings.animCycleDur, {y: -0.2, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
-    tl.to(body['lowerLeftArm'].position, playerSettings.animCycleDur, {z: -0.7, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
-
-    tl.to(body['lowerLeftArm'].rotation, playerSettings.animCycleDur, {y: Math.PI / 16, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
-    tl.to(body['leftArm'].rotation, playerSettings.animCycleDur, {y: Math.PI / 16, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
-
-    //Right Arm
-    tl.to(body['upperRightArm'].rotation, playerSettings.animCycleDur, {x: -Math.PI / 4, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
-    tl.to(body['lowerRightArm'].rotation, playerSettings.animCycleDur, {x: -Math.PI / 4, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
-    tl.to(body['lowerRightArm'].position, playerSettings.animCycleDur, {y: -0.2, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
-    tl.to(body['lowerRightArm'].position, playerSettings.animCycleDur, {z: 0.7, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
-
-    tl.to(body['lowerRightArm'].rotation, playerSettings.animCycleDur, {y: -Math.PI / 16, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
-    tl.to(body['rightArm'].rotation, playerSettings.animCycleDur, {y: Math.PI / 16, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
-
-    //Left Leg
-    tl.to(body['lowerLeftLeg'].rotation, playerSettings.animCycleDur, {x: -Math.PI / 4, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
-    tl.to(body['upperLeftLeg'].rotation, playerSettings.animCycleDur, {x: -Math.PI / 4, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
-    tl.to(body['upperLeftLeg'].position, playerSettings.animCycleDur, {y: -1.9, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
-    tl.to(body['upperLeftLeg'].position, playerSettings.animCycleDur, {z: 0.5, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
-
-    tl.to(body['upperLeftLeg'].rotation, playerSettings.animCycleDur, {y: Math.PI / 16, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
-    tl.to(body['leftArm'].rotation, playerSettings.animCycleDur, {y: Math.PI / 16, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
-
-    //Right Leg
-    tl.to(body['upperRightLeg'].rotation, playerSettings.animCycleDur, {x: Math.PI / 4, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
-    tl.to(body['lowerRightLeg'].rotation, playerSettings.animCycleDur, {x: Math.PI / 4, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
-    tl.to(body['lowerRightLeg'].position, playerSettings.animCycleDur, {y: -1.9, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
-    tl.to(body['lowerRightLeg'].position, playerSettings.animCycleDur, {z: -0.5, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
-
-    tl.to(body['lowerRightLeg'].rotation, playerSettings.animCycleDur, {y: Math.PI / 16, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
-    tl.to(body['rightLeg'].rotation, playerSettings.animCycleDur, {y: Math.PI / 16, ease: Expo.easeOut}, `-=${playerSettings.animCycleDur}`);
-}
 
 //Toggles
 function togglePhone() {
